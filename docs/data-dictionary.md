@@ -31,7 +31,13 @@ Este documento descreve o schema e os metadados do dataset de Churn (`dataset.cs
 ## 4. Variável Alvo (Target)
 - **Churn**: Indica se o cliente cancelou os serviços (churned) no último mês (`Yes`, `No`). Esta é a variável que será prevista pela nossa Rede Neural.
 
-## 5. Referências e Fontes
+## 5. Observações da Análise Exploratória (Data Readiness)
+Durante a execução do nosso EDA (`01-eda-baselines.ipynb`), mapeamos as seguintes características vitais para a modelagem:
+* **Problema de Tipagem:** A coluna `TotalCharges` sofre de um erro clássico de exportação. Clientes no primeiro mês (`tenure = 0`) possuem essa coluna vazia (com espaços em branco), o que faz o Pandas tipificá-la como `object`. Nós a convertemos forçadamente para numérica e preenchemos esses espaços com `0`.
+* **Desbalanceamento:** A variável alvo `Churn` é desbalanceada. A grande maioria dos clientes está retida (`No`). Isso reforça a necessidade de usarmos métricas como F1-Score ou PR-AUC ao invés de apenas Acurácia.
+* **Correlações Iniciais:** Identificamos bivariadamente que clientes com **menor tempo de casa**, contratos **Mês a Mês** e **maiores cobranças mensais** possuem um risco muito mais alto de cancelamento.
+
+## 6. Referências e Fontes
 * **Dataset Original (Raw CSV):** [Download Direto via GitHub (IBM)](https://raw.githubusercontent.com/IBM/telco-customer-churn-on-icp4d/master/data/Telco-Customer-Churn.csv)
 * **Repositório da IBM:** [IBM / telco-customer-churn-on-icp4d](https://github.com/IBM/telco-customer-churn-on-icp4d)
 * **Documentação da Comunidade:** [Telco Customer Churn (Kaggle)](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)
