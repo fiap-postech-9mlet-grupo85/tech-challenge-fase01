@@ -1,7 +1,10 @@
-.PHONY: install clean lint format
+.PHONY: install clean lint format download-data
 
 install:
 	pip install -e ".[dev]"
+
+download-data:
+	bash tools/scripts/download_data.sh
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
