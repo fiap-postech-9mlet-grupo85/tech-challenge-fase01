@@ -38,9 +38,13 @@ Desenvolvimento da solução principal.
 
 ### 4. Engenharia e Operação
 A estrutura de software que suporta o modelo em produção.
-* [**API de Inferência**](src/main.py): Implementação do FastAPI com endpoints de predição e saúde.
-* [**Model Card**](docs/model-card.md): Documentação técnica sobre performance, vieses e limitações do modelo.
-* [**Plano de Monitoramento**](docs/monitoring.md): Estratégia de alertas e métricas pós-deploy.
+* **Refatoração MLOps (Pacote Python)**:
+    * [**Arquitetura de Software**](docs/software-architecture.md): Documentação detalhada sobre as camadas de features e modelagem na pasta `src/`.
+* **Serviço**:
+    * [**API de Inferência**](src/main.py): Implementação do FastAPI com endpoints de predição e saúde.
+* **Governança Pós-Deploy**:
+    * [**Model Card**](docs/model-card.md): Documentação técnica sobre performance, vieses e limitações do modelo.
+    * [**Plano de Monitoramento**](docs/monitoring.md): Estratégia de alertas e métricas pós-deploy.
 
 ---
 
@@ -67,6 +71,13 @@ A estrutura de software que suporta o modelo em produção.
 ### 🧠 Execução da Modelagem
 5.  **Fase 1 (EDA e Baselines Lineares):** Execute o notebook `notebooks/01-eda-baselines.ipynb` para limpar os dados e treinar os modelos iniciais do Scikit-Learn.
 6.  **Fase 2 (Redes Neurais PyTorch):** Execute o notebook `notebooks/02-neural-network-training.ipynb` para treinar a MLP e executar o Grid Search (Otimização de Hiperparâmetros).
+
+### 🏗️ Treinamento Modular (Engenharia de Machine Learning)
+7.  **Exportação de Artefatos (Fase 3):** A lógica isolada na pasta `src/` precisa ser treinada fora dos notebooks para gerar os arquivos binários pesados de produção. Execute:
+    ```bash
+    PYTHONPATH=. python src/models/train_model.py
+    ```
+    Isso povoará a pasta `models/` com os artefatos `preprocessor.joblib` e `churn_mlp.pth` que serão sugados pela API.
 
 ### 📊 Acompanhamento de Experimentos (MLflow UI)
 O MLflow é o nosso repositório de governança. Para visualizar o comparativo de métricas, os hiperparâmetros campeões e acessar os artefatos serializados (tanto da Fase 1 quanto da Fase 2):
