@@ -58,6 +58,14 @@ A estrutura de software que suporta o modelo em produção.
 
 ---
 
+## 💻 Requisitos do Sistema
+Para executar este projeto localmente, garanta que sua máquina possua:
+* **Python 3.10+**: O projeto utiliza recursos de tipagem modernos que exigem pelo menos o Python 3.10.
+* **Make**: Utilitário de automação para rodar os atalhos do `Makefile`. Nativo no Linux/Mac. No Windows, recomenda-se o uso do WSL ou Git Bash.
+* **Git**: Para clonar o repositório.
+
+---
+
 ## 🚀 Como Executar
 
 ### 🔧 Preparação do Ambiente
@@ -86,6 +94,13 @@ Para garantir a saúde do software desenvolvido, a suíte de testes do Pytest co
    make test
    ```
    A barra verde assegurará que o pacote Python Modular está pronto para ir a Produção.
+
+### 🌐 Disponibilização da API (FastAPI)
+9. **Iniciar o Servidor Local:** Para expor a nossa inteligência via HTTP e interagir com o Swagger UI, basta rodar:
+   ```bash
+   make run-api
+   ```
+   A API subirá na porta 8000. Acesse [http://localhost:8000/docs](http://localhost:8000/docs) para enviar predições em tempo real pela interface gráfica.
 
 ### 📊 Acompanhamento de Experimentos (MLflow UI)
 O MLflow é o nosso repositório de governança. Para visualizar o comparativo de métricas, os hiperparâmetros campeões e acessar os artefatos serializados (tanto da Fase 1 quanto da Fase 2):
