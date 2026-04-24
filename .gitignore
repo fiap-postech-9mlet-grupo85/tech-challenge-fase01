@@ -209,6 +209,8 @@ __marimo__/
 
 # MLflow
 mlruns/
+mlflow.db
+*.db
 
 # OS files
 .DS_Store

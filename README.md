@@ -46,9 +46,13 @@ A estrutura de software que suporta o modelo em produção.
 ---
 
 ## 🚀 Como Executar
-1.  **Setup do Ambiente:** Instale as dependências via Makefile com `make install`.
-2.  **Baixar os Dados:** Execute o script `make download-data` (ou `bash tools/scripts/download_data.sh`) para buscar o dataset da IBM.
-3.  **Análise Exploratória:** O notebook está em `notebooks/01_eda_baselines.ipynb`.
+1.  **Criar Ambiente Virtual (Recomendado):** `python3 -m venv .venv`
+2.  **Ativar o Ambiente:** 
+    - Mac/Linux: `source .venv/bin/activate`
+    - Windows: `.venv\Scripts\activate`
+3.  **Setup de Dependências:** Com o ambiente ativado, rode `make install`.
+4.  **Baixar os Dados:** Execute o script `make download-data` (ou `bash tools/scripts/download_data.sh`) para buscar o dataset da IBM.
+5.  **Análise Exploratória:** O notebook está em `notebooks/01-eda-baselines.ipynb`.
 
 
 ---
