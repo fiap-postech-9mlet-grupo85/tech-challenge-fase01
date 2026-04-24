@@ -3,7 +3,7 @@
 # Este script realiza o download da base sugerida (Telco Customer Churn - IBM)
 # e aloca o arquivo CSV dentro da pasta data/raw.
 
-URL="https://raw.githubusercontent.com/IBM/telco-customer-churn-on-icp4d/master/data/WA_Fn-UseC_-Telco-Customer-Churn.csv"
+URL="https://raw.githubusercontent.com/IBM/telco-customer-churn-on-icp4d/master/data/Telco-Customer-Churn.csv"
 OUTPUT_DIR="data/raw"
 OUTPUT_FILE="${OUTPUT_DIR}/dataset.csv"
 
