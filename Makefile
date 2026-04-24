@@ -5,7 +5,7 @@ PIP = $(VENV_BIN)/pip
 PYTEST = $(VENV_BIN)/pytest
 RUFF = $(VENV_BIN)/ruff
 
-.PHONY: venv install clean lint format download-data test train
+.PHONY: venv install clean lint format download-data test train run-api
 
 # Regra para criar o ambiente virtual caso não exista
 $(VENV)/bin/activate:
@@ -35,3 +35,6 @@ test: venv
 
 train: venv
 	PYTHONPATH=. $(PYTHON) src/models/train_model.py
+
+run-api: venv
+	PYTHONPATH=. $(VENV_BIN)/uvicorn src.main:app --reload --host 0.0.0.0 --port 8000

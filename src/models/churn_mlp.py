@@ -5,9 +5,10 @@ import torch.nn as nn
 class ChurnMLP(nn.Module):
     """
     Arquitetura de Rede Neural Densa (Feed-Forward) para classificação binária de Churn.
-    A rede possui Input -> 64 -> 32 -> 1, com funções de ativação ReLU e Dropout de 30% 
+    A rede possui Input -> 64 -> 32 -> 1, com funções de ativação ReLU e Dropout de 30%
     para prevenção de overfitting.
     """
+
     def __init__(self, input_dim: int):
         super(ChurnMLP, self).__init__()
         self.fc1 = nn.Linear(input_dim, 64)

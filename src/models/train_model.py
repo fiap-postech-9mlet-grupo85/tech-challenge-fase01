@@ -17,8 +17,8 @@ from src.models.churn_mlp import ChurnMLP
 # Configuração Padrão Corporativa de Logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
 )
 logger = logging.getLogger(__name__)
 
@@ -27,6 +27,7 @@ LEARNING_RATE = 0.001
 BATCH_SIZE = 64
 EPOCHS = 100
 PATIENCE = 10
+
 
 class ChurnDataset(Dataset):
     def __init__(self, X, y):
@@ -39,15 +40,18 @@ class ChurnDataset(Dataset):
     def __getitem__(self, idx):
         return self.X[idx], self.y[idx]
 
+
 def main():
     logger.info("Iniciando Treinamento Modular do Telco Churn PyTorch MLP...")
 
     # 0. Setup do MLflow Tracking
     mlflow.set_tracking_uri("sqlite:///mlflow.db")
-    experiment_name = 'churn_mlp_pytorch_modular'
+    experiment_name = "churn_mlp_pytorch_modular"
 
     if not mlflow.get_experiment_by_name(experiment_name):
-        mlflow.create_experiment(name=experiment_name, artifact_location="file:./mlruns")
+        mlflow.create_experiment(
+            name=experiment_name, artifact_location="file:./mlruns"
+        )
     mlflow.set_experiment(experiment_name)
 
     # Englobando a execução em uma Run do MLflow
@@ -57,19 +61,23 @@ def main():
         mlflow.log_param("patience", PATIENCE)
 
         # 1. Carregamento e Limpeza
-        data_path = 'data/raw/dataset.csv'
+        data_path = "data/raw/dataset.csv"
         if not os.path.exists(data_path):
             logger.error(f"Dataset não encontrado em {data_path}.")
-            raise FileNotFoundError(f"Dataset não encontrado em {data_path}. Rode o download primeiro.")
+            raise FileNotFoundError(
+                f"Dataset não encontrado em {data_path}. Rode o download primeiro."
+            )
 
         df = pd.read_csv(data_path)
         df = clean_raw_data(df)
 
         # Separação
-        X = df.drop(columns=['Churn', 'customerID'])
-        y = df['Churn'].map({'Yes': 1, 'No': 0}).values
+        X = df.drop(columns=["Churn", "customerID"])
+        y = df["Churn"].map({"Yes": 1, "No": 0}).values
 
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.2, stratify=y, random_state=42
+        )
 
         # 2. Pré-processamento
         logger.info("Processando features via ColumnTransformer...")
@@ -79,8 +87,8 @@ def main():
         X_test_tf = preprocessor.transform(X_test)
 
         # Salva o Preprocessor fitado
-        os.makedirs('models', exist_ok=True)
-        joblib.dump(preprocessor, 'models/preprocessor.joblib')
+        os.makedirs("models", exist_ok=True)
+        joblib.dump(preprocessor, "models/preprocessor.joblib")
         logger.info("Preprocessor salvo em models/preprocessor.joblib")
 
         # 3. Preparação para PyTorch
@@ -98,13 +106,15 @@ def main():
         num_positives = np.sum(y_train == 1)
         num_negatives = np.sum(y_train == 0)
         pos_weight_val = num_negatives / num_positives
-        criterion = nn.BCEWithLogitsLoss(pos_weight=torch.tensor([pos_weight_val], dtype=torch.float32))
+        criterion = nn.BCEWithLogitsLoss(
+            pos_weight=torch.tensor([pos_weight_val], dtype=torch.float32)
+        )
 
         optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
         # 5. Loop de Treinamento com Early Stopping
         logger.info("Iniciando treinamento da Rede Neural...")
-        best_val_loss = float('inf')
+        best_val_loss = float("inf")
         epochs_no_improve = 0
         final_epoch = 0
 
@@ -141,15 +151,17 @@ def main():
             if val_loss < best_val_loss:
                 best_val_loss = val_loss
                 epochs_no_improve = 0
-                torch.save(model.state_dict(), 'models/churn_mlp.pth')
+                torch.save(model.state_dict(), "models/churn_mlp.pth")
             else:
                 epochs_no_improve += 1
 
-            if (epoch+1) % 10 == 0:
-                logger.info(f"Epoch {epoch+1}/{EPOCHS} | Train Loss: {train_loss:.4f} | Val Loss: {val_loss:.4f}")
+            if (epoch + 1) % 10 == 0:
+                logger.info(
+                    f"Epoch {epoch + 1}/{EPOCHS} | Train Loss: {train_loss:.4f} | Val Loss: {val_loss:.4f}"
+                )
 
             if epochs_no_improve >= PATIENCE:
-                logger.warning(f"Early Stopping acionado na Época {epoch+1}!")
+                logger.warning(f"Early Stopping acionado na Época {epoch + 1}!")
                 final_epoch = epoch + 1
                 break
 
@@ -157,7 +169,10 @@ def main():
         mlflow.log_metric("epochs_run", final_epoch)
         mlflow.log_metric("best_val_loss", best_val_loss)
 
-        logger.info("Treinamento concluído. Pesos da Rede Neural salvos em models/churn_mlp.pth")
+        logger.info(
+            "Treinamento concluído. Pesos da Rede Neural salvos em models/churn_mlp.pth"
+        )
+
 
 if __name__ == "__main__":
     main()
