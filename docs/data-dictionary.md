@@ -1,6 +1,6 @@
 # Dicionário de Dados: Telco Customer Churn (IBM)
 
-Este documento descreve o schema e os metadados do dataset `WA_Fn-UseC_-Telco-Customer-Churn.csv` fornecido pela IBM. O dataset possui 21 colunas no total, representando o perfil e o histórico de uma base de clientes de telecomunicações.
+Este documento descreve o schema e os metadados do dataset de Churn (`dataset.csv`), originalmente fornecido pela IBM como `Telco-Customer-Churn.csv`. O dataset possui 21 colunas no total, representando o perfil e o histórico de uma base de clientes de telecomunicações.
 
 ## 1. Informações Demográficas
 - **customerID**: Identificador único alfanumérico para cada cliente (ex: `7590-VHVEG`).
