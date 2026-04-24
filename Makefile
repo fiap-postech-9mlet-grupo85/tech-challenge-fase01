@@ -1,4 +1,4 @@
-.PHONY: install clean lint format test run
+.PHONY: install clean lint format
 
 install:
 	pip install -e ".[dev]"
@@ -13,9 +13,3 @@ lint:
 
 format:
 	ruff format .
-
-test:
-	pytest tests/
-
-run:
-	uvicorn src.api.app:app --reload --host 0.0.0.0 --port 8000
