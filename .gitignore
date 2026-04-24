@@ -221,3 +221,6 @@ Thumbs.db
 # *.parquet
 # *.pt
 # *.pkl
+
+# Arquivos locais de contexto
+.context/
