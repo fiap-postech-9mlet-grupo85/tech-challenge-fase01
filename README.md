@@ -16,10 +16,11 @@ Abaixo está a ordem sugerida para explorar o projeto, seguindo o ciclo de vida 
 
 ### 1. Entendimento de Negócio
 Documentação estratégica sobre o problema e as decisões técnicas iniciais.
-* [**ML Canvas**](docs/ML_CANVAS.md): Stakeholders, métricas de negócio e SLOs.
+* [**ML Canvas**](docs/ml-canvas.md): Stakeholders, métricas de negócio e SLOs.
 
 ### 2. Análise e Experimentação
 Exploração dos dados e definição do ponto de partida.
+* [**Dicionário de Dados**](docs/data-dictionary.md): Schema e metadados detalhados sobre as variáveis (features) do dataset.
 * [**Notebook de EDA & Baselines**](notebooks/01_eda_baselines.ipynb): Análise exploratória completa e modelos simples (Logistic Regression) registrados no MLflow.
 
 ### 3. Modelagem Avançada
@@ -29,8 +30,8 @@ Desenvolvimento da solução principal.
 ### 4. Engenharia e Operação
 A estrutura de software que suporta o modelo em produção.
 * [**API de Inferência**](src/main.py): Implementação do FastAPI com endpoints de predição e saúde.
-* [**Model Card**](docs/MODEL_CARD.md): Documentação técnica sobre performance, vieses e limitações do modelo.
-* [**Plano de Monitoramento**](docs/MONITORING.md): Estratégia de alertas e métricas pós-deploy.
+* [**Model Card**](docs/model-card.md): Documentação técnica sobre performance, vieses e limitações do modelo.
+* [**Plano de Monitoramento**](docs/monitoring.md): Estratégia de alertas e métricas pós-deploy.
 
 ---
 
@@ -45,9 +46,10 @@ A estrutura de software que suporta o modelo em produção.
 ---
 
 ## 🚀 Como Executar
-1.  **Setup do Ambiente:** `pip install -r requirements.txt` (ou via `pyproject.toml`).
-2.  **Executar Testes:** `make test` ou `pytest`.
-3.  **Rodar API:** `make run` ou `uvicorn src.main:app`.
+1.  **Setup do Ambiente:** Instale as dependências via Makefile com `make install`.
+2.  **Baixar os Dados:** Execute o script `make download-data` (ou `bash tools/scripts/download_data.sh`) para buscar o dataset da IBM.
+3.  **Análise Exploratória:** O notebook está em `notebooks/01_eda_baselines.ipynb`.
+
 
 ---
 
