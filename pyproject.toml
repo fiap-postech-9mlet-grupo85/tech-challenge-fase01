@@ -10,7 +10,8 @@ readme = "README.md"
 requires-python = ">=3.10"
 authors = [
     { name = "Bruno Machado Abreu - rm372965" },
-    { name = "Renan Prado Gonzalez - rm374089" }
+    { name = "Renan Prado Gonzalez - rm374089" },
+    { name = "Davi Coene Rosa - rm371466" }
 ]
 # Dependências principais exigidas e auxiliares
 dependencies = [

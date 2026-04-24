@@ -1,5 +1,14 @@
 # Tech Challenge - Fase 1: ML Engineering (FIAP)
 
+**Curso:** FIAP Pós Tech - Machine Learning Engineering  
+**Turma:** 9MLET  
+**Autores (Grupo 32):**
+* Bruno Machado Abreu (RM372965)
+* Renan Prado Gonzalez (RM374089)
+* Davi Coene Rosa (RM371466)
+
+---
+
 ## 📌 Visão Geral
 Este projeto consiste no desenvolvimento de uma solução end-to-end para a previsão de **Churn** (cancelamento de clientes) de uma operadora de telecomunicações. O objetivo é construir desde o entendimento do problema de negócio até a disponibilização de uma API de inferência robusta e testada.
 
@@ -21,7 +30,7 @@ Documentação estratégica sobre o problema e as decisões técnicas iniciais.
 ### 2. Análise e Experimentação
 Exploração dos dados e definição do ponto de partida.
 * [**Dicionário de Dados**](docs/data-dictionary.md): Schema e metadados detalhados sobre as variáveis (features) do dataset.
-* [**Notebook de EDA & Baselines**](notebooks/01_eda_baselines.ipynb): Análise exploratória completa e modelos simples (Logistic Regression) registrados no MLflow.
+* [**Notebook de EDA & Baselines**](notebooks/01-eda-baselines.ipynb): Análise exploratória completa e modelos simples (Logistic Regression) registrados no MLflow.
 
 ### 3. Modelagem Avançada
 Desenvolvimento da solução principal.
