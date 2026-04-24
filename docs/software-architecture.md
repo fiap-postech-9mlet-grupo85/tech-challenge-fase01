@@ -13,7 +13,12 @@ Responsável pela transformação bruta dos dados.
     * `clean_raw_data(df)`: Regras hardcoded de limpeza de banco de dados (ex: imputação de valores `TotalCharges` em branco).
     * `get_preprocessor()`: Instancia e retorna a fábrica exata do Scikit-Learn (`ColumnTransformer` com `StandardScaler` e `OneHotEncoder`).
 
-### 2. `src/models/`
+### 2. `src/schemas/`
+A barreira de segurança da API.
+* **`data_schema.py`**:
+    * Utiliza a biblioteca **Pandera** para definir o contrato rígido dos dados. Ele garante que qualquer dicionário/JSON imputado contenha as 21 colunas originais do dataset com seus devidos tipos (ex: `MonthlyCharges` deve ser `float` maior ou igual a zero).
+    
+### 3. `src/models/`
 Encapsula o coração algorítmico do Churn e as lógicas de I/O.
 * **`churn_mlp.py`**:
     * Contém estritamente a classe PyTorch (`nn.Module`). Define as camadas ocultas, neurônios, ativações (ReLU) e funções de regularização (Dropout).
@@ -21,7 +26,13 @@ Encapsula o coração algorítmico do Churn e as lógicas de I/O.
     * Script automatizado que roda ponta a ponta. Ele pega os dados de `data/raw/`, treina os preprocessors, constrói os tensores, treina a rede neural (`ChurnMLP`) com `EarlyStopping` e **exporta os pesos** para a pasta `models/` em formato `.joblib` e `.pth`.
 * **`predict_model.py` (Orquestrador de Inferência)**:
     * O módulo de "leitura". Ele utiliza *Lazy Loading* (padrão Singleton) para carregar os pesos pesados de `.joblib` e `.pth` apenas uma vez na memória RAM.
-    * Expõe a função limpa `predict_churn(raw_dict)`, que converte o JSON em Tensor, avalia na Rede Neural, e aplica a rígida **Regra de Negócio de 30% (Business Threshold)** para classificar o churn, baseada na matriz de custos financeiros desenhada no ML Canvas.
+    * Expõe a função limpa `predict_churn(raw_dict)`, que valida os dados no **Pandera**, converte o JSON em Tensor, avalia na Rede Neural, e aplica a rígida **Regra de Negócio de 30% (Business Threshold)** para classificar o churn, baseada na matriz de custos financeiros desenhada no ML Canvas.
+
+## 🛡️ Qualidade de Código (QA)
+Para suportar esta arquitetura com Grau de Produção, três pilares de QA foram erguidos:
+1. **Logging**: Todos os scripts usam o módulo `logging` nativo ao invés de prints, formatados para fácil ingestão de telemetria.
+2. **MLflow Tracking**: O `train_model.py` não atua em modo silencioso; ele grava a época, as losses de treino/validação e a parada de Early Stopping diretamente no repositório local do MLflow.
+3. **Testes Unitários (Pytest)**: Localizados na pasta `tests/`. Validam anomalias na formatação de Features e testam a saúde do *Forward Pass* dimensional da arquitetura em PyTorch.
 
 ## 🚀 Fluxo de Vida (Ciclo Operacional)
 1. O Cientista de Dados roda a pesquisa nos cadernos (pasta `notebooks/`).

@@ -77,7 +77,15 @@ A estrutura de software que suporta o modelo em produção.
     ```bash
     PYTHONPATH=. python src/models/train_model.py
     ```
-    Isso povoará a pasta `models/` com os artefatos `preprocessor.joblib` e `churn_mlp.pth` que serão sugados pela API.
+    Isso povoará a pasta `models/` com os artefatos `preprocessor.joblib` e `churn_mlp.pth` que serão sugados pela API. Além disso, o treinamento espelhará os dados em formato de log no **MLflow**.
+
+### 🛡️ Engenharia de Qualidade (Testes Unitários)
+Para garantir a saúde do software desenvolvido, a suíte de testes do Pytest cobre desde o tratamento de anomalias no dataset até a arquitetura dos tensores da Rede Neural.
+8. **Rodar a Suíte de Testes:** Execute o comando abaixo na raiz do repositório:
+   ```bash
+   PYTHONPATH=. pytest tests/ -v
+   ```
+   A barra verde assegurará que o pacote Python Modular está pronto para ir a Produção.
 
 ### 📊 Acompanhamento de Experimentos (MLflow UI)
 O MLflow é o nosso repositório de governança. Para visualizar o comparativo de métricas, os hiperparâmetros campeões e acessar os artefatos serializados (tanto da Fase 1 quanto da Fase 2):
@@ -86,9 +94,10 @@ O MLflow é o nosso repositório de governança. Para visualizar o comparativo d
    mlflow ui --backend-store-uri sqlite:///mlflow.db
    ```
 2. Abra o navegador em: [http://localhost:5000](http://localhost:5000)
-3. Na interface, você encontrará dois grandes experimentos:
+3. Na interface, você encontrará três grandes experimentos:
    * **`churn_baselines`**: Contém o histórico da Etapa 1 (Regressão Logística e Dummy).
    * **`churn_mlp_pytorch`**: Contém o histórico da Etapa 2 (A Rede Neural inicial e as Sub-Runs aninhadas do Grid Search).
+   * **`churn_mlp_pytorch_modular`**: Contém o rastreio da automação corporativa (Etapa 3), gravando logs isolados do script `train_model.py`.
 
 
 ---
