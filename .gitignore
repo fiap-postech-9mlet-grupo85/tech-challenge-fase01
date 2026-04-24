@@ -138,6 +138,7 @@ celerybeat.pid
 .env
 .envrc
 .venv
+.venv/
 env/
 venv/
 ENV/
@@ -205,3 +206,18 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# MLflow
+mlruns/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Data and Model artifacts
+# data/ # Comentando pois é especificado no documento de Challenge que os dados devem estar presentes no repositório, mas em um cenário real, é recomendado não incluir dados e modelos no repositório, e sim usar um serviço de armazenamento de artefatos ou um sistema de versionamento de dados.
+# models/
+# *.csv
+# *.parquet
+# *.pt
+# *.pkl
