@@ -32,6 +32,6 @@ Este documento descreve o schema e os metadados do dataset `WA_Fn-UseC_-Telco-Cu
 - **Churn**: Indica se o cliente cancelou os serviços (churned) no último mês (`Yes`, `No`). Esta é a variável que será prevista pela nossa Rede Neural.
 
 ## 5. Referências e Fontes
-* **Dataset Original (Raw CSV):** [Download Direto via GitHub (IBM)](https://raw.githubusercontent.com/IBM/telco-customer-churn-on-icp4d/master/data/WA_Fn-UseC_-Telco-Customer-Churn.csv)
+* **Dataset Original (Raw CSV):** [Download Direto via GitHub (IBM)](https://raw.githubusercontent.com/IBM/telco-customer-churn-on-icp4d/master/data/Telco-Customer-Churn.csv)
 * **Repositório da IBM:** [IBM / telco-customer-churn-on-icp4d](https://github.com/IBM/telco-customer-churn-on-icp4d)
 * **Documentação da Comunidade:** [Telco Customer Churn (Kaggle)](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)
