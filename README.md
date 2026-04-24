@@ -75,7 +75,7 @@ A estrutura de software que suporta o modelo em produção.
 ### 🏗️ Treinamento Modular (Engenharia de Machine Learning)
 7.  **Exportação de Artefatos (Fase 3):** A lógica isolada na pasta `src/` precisa ser treinada fora dos notebooks para gerar os arquivos binários pesados de produção. Execute:
     ```bash
-    PYTHONPATH=. python src/models/train_model.py
+    make train
     ```
     Isso povoará a pasta `models/` com os artefatos `preprocessor.joblib` e `churn_mlp.pth` que serão sugados pela API. Além disso, o treinamento espelhará os dados em formato de log no **MLflow**.
 
@@ -83,7 +83,7 @@ A estrutura de software que suporta o modelo em produção.
 Para garantir a saúde do software desenvolvido, a suíte de testes do Pytest cobre desde o tratamento de anomalias no dataset até a arquitetura dos tensores da Rede Neural.
 8. **Rodar a Suíte de Testes:** Execute o comando abaixo na raiz do repositório:
    ```bash
-   PYTHONPATH=. pytest tests/ -v
+   make test
    ```
    A barra verde assegurará que o pacote Python Modular está pronto para ir a Produção.
 

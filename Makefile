@@ -1,4 +1,4 @@
-.PHONY: install clean lint format download-data
+.PHONY: install clean lint format download-data test train
 
 install:
 	pip install -e ".[dev]"
@@ -16,3 +16,9 @@ lint:
 
 format:
 	ruff format .
+
+test:
+	PYTHONPATH=. pytest tests/ -v
+
+train:
+	PYTHONPATH=. python src/models/train_model.py
