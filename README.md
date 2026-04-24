@@ -38,9 +38,13 @@ Desenvolvimento da solução principal.
 
 ### 4. Engenharia e Operação
 A estrutura de software que suporta o modelo em produção.
-* [**API de Inferência**](src/main.py): Implementação do FastAPI com endpoints de predição e saúde.
-* [**Model Card**](docs/model-card.md): Documentação técnica sobre performance, vieses e limitações do modelo.
-* [**Plano de Monitoramento**](docs/monitoring.md): Estratégia de alertas e métricas pós-deploy.
+* **Refatoração MLOps (Pacote Python)**:
+    * [**Arquitetura de Software**](docs/software-architecture.md): Documentação detalhada sobre as camadas de features e modelagem na pasta `src/`.
+* **Serviço**:
+    * [**API de Inferência**](src/main.py): Implementação do FastAPI com endpoints de predição e saúde.
+* **Governança Pós-Deploy**:
+    * [**Model Card**](docs/model-card.md): Documentação técnica sobre performance, vieses e limitações do modelo.
+    * [**Plano de Monitoramento**](docs/monitoring.md): Estratégia de alertas e métricas pós-deploy.
 
 ---
 
@@ -68,6 +72,21 @@ A estrutura de software que suporta o modelo em produção.
 5.  **Fase 1 (EDA e Baselines Lineares):** Execute o notebook `notebooks/01-eda-baselines.ipynb` para limpar os dados e treinar os modelos iniciais do Scikit-Learn.
 6.  **Fase 2 (Redes Neurais PyTorch):** Execute o notebook `notebooks/02-neural-network-training.ipynb` para treinar a MLP e executar o Grid Search (Otimização de Hiperparâmetros).
 
+### 🏗️ Treinamento Modular (Engenharia de Machine Learning)
+7.  **Exportação de Artefatos (Fase 3):** A lógica isolada na pasta `src/` precisa ser treinada fora dos notebooks para gerar os arquivos binários pesados de produção. Execute:
+    ```bash
+    make train
+    ```
+    Isso povoará a pasta `models/` com os artefatos `preprocessor.joblib` e `churn_mlp.pth` que serão sugados pela API. Além disso, o treinamento espelhará os dados em formato de log no **MLflow**.
+
+### 🛡️ Engenharia de Qualidade (Testes Unitários)
+Para garantir a saúde do software desenvolvido, a suíte de testes do Pytest cobre desde o tratamento de anomalias no dataset até a arquitetura dos tensores da Rede Neural.
+8. **Rodar a Suíte de Testes:** Execute o comando abaixo na raiz do repositório:
+   ```bash
+   make test
+   ```
+   A barra verde assegurará que o pacote Python Modular está pronto para ir a Produção.
+
 ### 📊 Acompanhamento de Experimentos (MLflow UI)
 O MLflow é o nosso repositório de governança. Para visualizar o comparativo de métricas, os hiperparâmetros campeões e acessar os artefatos serializados (tanto da Fase 1 quanto da Fase 2):
 1. Com o ambiente virtual ativado, suba o servidor a partir da raiz do repositório:
@@ -75,9 +94,10 @@ O MLflow é o nosso repositório de governança. Para visualizar o comparativo d
    mlflow ui --backend-store-uri sqlite:///mlflow.db
    ```
 2. Abra o navegador em: [http://localhost:5000](http://localhost:5000)
-3. Na interface, você encontrará dois grandes experimentos:
+3. Na interface, você encontrará três grandes experimentos:
    * **`churn_baselines`**: Contém o histórico da Etapa 1 (Regressão Logística e Dummy).
    * **`churn_mlp_pytorch`**: Contém o histórico da Etapa 2 (A Rede Neural inicial e as Sub-Runs aninhadas do Grid Search).
+   * **`churn_mlp_pytorch_modular`**: Contém o rastreio da automação corporativa (Etapa 3), gravando logs isolados do script `train_model.py`.
 
 
 ---
