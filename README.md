@@ -34,7 +34,7 @@ Exploração dos dados e definição do ponto de partida.
 
 ### 3. Modelagem Avançada
 Desenvolvimento da solução principal.
-* [**Rede Neural (PyTorch)**](notebooks/02_neural_network_training.ipynb): Arquitetura da MLP, treinamento com Early Stopping e comparação de métricas.
+* [**Rede Neural (PyTorch)**](notebooks/02-neural-network-training.ipynb): Arquitetura da MLP, treinamento com Early Stopping e comparação de métricas.
 
 ### 4. Engenharia e Operação
 A estrutura de software que suporta o modelo em produção.
