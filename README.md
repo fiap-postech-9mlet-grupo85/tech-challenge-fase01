@@ -34,7 +34,7 @@ Exploração dos dados e definição do ponto de partida.
 
 ### 3. Modelagem Avançada
 Desenvolvimento da solução principal.
-* [**Rede Neural (PyTorch)**](notebooks/02_neural_network_training.ipynb): Arquitetura da MLP, treinamento com Early Stopping e comparação de métricas.
+* [**Rede Neural (PyTorch)**](notebooks/02-neural-network-training.ipynb): Arquitetura da MLP, treinamento com Early Stopping e comparação de métricas.
 
 ### 4. Engenharia e Operação
 A estrutura de software que suporta o modelo em produção.
@@ -55,13 +55,29 @@ A estrutura de software que suporta o modelo em produção.
 ---
 
 ## 🚀 Como Executar
-1.  **Criar Ambiente Virtual (Recomendado):** `python3 -m venv .venv`
+
+### 🔧 Preparação do Ambiente
+1.  **Criar Ambiente Virtual:** `python3 -m venv .venv`
 2.  **Ativar o Ambiente:** 
     - Mac/Linux: `source .venv/bin/activate`
     - Windows: `.venv\Scripts\activate`
 3.  **Setup de Dependências:** Com o ambiente ativado, rode `make install`.
 4.  **Baixar os Dados:** Execute o script `make download-data` (ou `bash tools/scripts/download_data.sh`) para buscar o dataset da IBM.
-5.  **Análise Exploratória:** O notebook está em `notebooks/01-eda-baselines.ipynb`.
+
+### 🧠 Execução da Modelagem
+5.  **Fase 1 (EDA e Baselines Lineares):** Execute o notebook `notebooks/01-eda-baselines.ipynb` para limpar os dados e treinar os modelos iniciais do Scikit-Learn.
+6.  **Fase 2 (Redes Neurais PyTorch):** Execute o notebook `notebooks/02-neural-network-training.ipynb` para treinar a MLP e executar o Grid Search (Otimização de Hiperparâmetros).
+
+### 📊 Acompanhamento de Experimentos (MLflow UI)
+O MLflow é o nosso repositório de governança. Para visualizar o comparativo de métricas, os hiperparâmetros campeões e acessar os artefatos serializados (tanto da Fase 1 quanto da Fase 2):
+1. Com o ambiente virtual ativado, suba o servidor a partir da raiz do repositório:
+   ```bash
+   mlflow ui --backend-store-uri sqlite:///mlflow.db
+   ```
+2. Abra o navegador em: [http://localhost:5000](http://localhost:5000)
+3. Na interface, você encontrará dois grandes experimentos:
+   * **`churn_baselines`**: Contém o histórico da Etapa 1 (Regressão Logística e Dummy).
+   * **`churn_mlp_pytorch`**: Contém o histórico da Etapa 2 (A Rede Neural inicial e as Sub-Runs aninhadas do Grid Search).
 
 
 ---
