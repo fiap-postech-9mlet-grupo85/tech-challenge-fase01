@@ -143,7 +143,12 @@ O MLflow é o nosso repositório de governança. Para visualizar o comparativo d
 
 
 ### ☁️ Deploy na Nuvem AWS (Produção)
-O projeto conta com Infraestrutura como Código (Terraform) para criar um ambiente grátis (Free-Tier) na AWS do Brasil (`sa-east-1`). A arquitetura engloba uma máquina EC2 executando o Docker com proteção HTTPS via CloudFront. Você tem duas opções para subir a API:
+O projeto conta com Infraestrutura como Código (Terraform) para criar um ambiente grátis (Free-Tier) na AWS do Brasil (`sa-east-1`). A arquitetura engloba uma máquina EC2 executando o Docker com proteção HTTPS via CloudFront.
+
+**Domínio Customizado (AWS ACM + ClouDNS):**
+Para entregar uma experiência profissional, implementamos um domínio limpo e seguro: `https://telcochurn.cloud-ip.cc/docs`. O Terraform gera automaticamente um certificado de segurança via AWS ACM e engata esse domínio no CloudFront, mediante a criação de registros CNAME no painel gratuito do ClouDNS.
+
+Você tem duas opções para subir a API:
 
 **Opção A: Via Github Actions (Recomendado)**
 1. Cadastre os Secrets `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY` no seu repositório.
