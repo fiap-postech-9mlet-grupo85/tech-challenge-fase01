@@ -1,7 +1,4 @@
-output "ec2_public_dns" {
-  description = "Acesso direto HTTP no EC2"
-  value       = "http://${aws_instance.app_server.public_dns}:8000/docs"
-}
+
 
 output "acm_validation_cname_name" {
   description = "NOME do Registro CNAME a ser criado no ClouDNS para a AWS liberar o certificado"

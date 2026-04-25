@@ -9,17 +9,22 @@ data "aws_ami" "amazon_linux_2023" {
   }
 }
 
+# 1.5 Obter a lista oficial de IPs do CloudFront gerenciada pela AWS
+data "aws_ec2_managed_prefix_list" "cloudfront" {
+  name = "com.amazonaws.global.cloudfront.origin-facing"
+}
+
 # 2. Security Group: Permitir entrada apenas na porta HTTP para a API e SSH para emergência
 resource "aws_security_group" "api_sg" {
   name        = "telco_churn_api_sg"
   description = "Permitir trafego web para a API do Telco Churn"
 
   ingress {
-    description = "HTTP Port for FastAPI"
-    from_port   = 8000
-    to_port     = 8000
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # O ideal seria apenas o range do CloudFront, mas simplificamos para o Free Tier
+    description     = "HTTP Port for FastAPI (Only from CloudFront)"
+    from_port       = 8000
+    to_port         = 8000
+    protocol        = "tcp"
+    prefix_list_ids = [data.aws_ec2_managed_prefix_list.cloudfront.id]
   }
 
   egress {
