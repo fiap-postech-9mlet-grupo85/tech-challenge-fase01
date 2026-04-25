@@ -26,4 +26,4 @@
 3. **API em Produção na Nuvem (AWS):**
    * **Swagger UI:** [https://api.telcochurn.cloud-ip.cc/docs](https://api.telcochurn.cloud-ip.cc/docs)
    * **Health Check:** [https://api.telcochurn.cloud-ip.cc/health](https://api.telcochurn.cloud-ip.cc/health)
-   * *Nota:* A API encontra-se hospedada na AWS, protegida por HTTPS via CloudFront e pronta para receber inferências em tempo real via endpoint `/v1/predict`.
+   * *Nota de Segurança (Geo-Blocking):* A API está hospedada na AWS e protegida por HTTPS via CloudFront. Para evitar ataques de bots globais, o CloudFront possui uma restrição geográfica ativa. A API é acessível publicamente **apenas por IPs localizados no Brasil e em Portugal**. Acessos de outros países retornarão erro HTTP 403 (Forbidden).

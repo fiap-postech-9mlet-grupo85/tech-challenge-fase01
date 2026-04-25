@@ -185,7 +185,10 @@ Você tem duas opções para subir a API:
   [![Pitch - Tech Challenge](https://img.youtube.com/vi/3OpsjKj8Zlw/hqdefault.jpg)](https://www.youtube.com/watch?v=3OpsjKj8Zlw)
 
 ### 🔗 Endpoints Oficiais (Produção AWS)
-A API está pública, respondendo via HTTPS e protegida contra ataques volumétricos pelo CloudFront:
+A API está pública, respondendo via HTTPS e blindada na borda pelo CloudFront. 
+
+> 🌍 **Aviso Importante de Segurança (Geo-Blocking):** 
+> Para otimizar custos no Free Tier e evitar ataques volumétricos ou bots maliciosos , implementamos uma **Whitelist Geográfica**. A API só aceita requisições provindas de endereços IP localizados no **Brasil (BR)** ou em **Portugal (PT)**. Tentar acessá-la via VPNs de outros países resultará em um bloqueio instantâneo do CloudFront (HTTP 403 Forbidden).
 
 * **Swagger UI (Documentação Interativa):** [GET /docs](https://api.telcochurn.cloud-ip.cc/docs)
 * **ReDoc (Documentação Alternativa):** [GET /redoc](https://api.telcochurn.cloud-ip.cc/redoc)
