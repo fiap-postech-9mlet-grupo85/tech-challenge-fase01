@@ -33,7 +33,7 @@ resource "aws_security_group" "api_sg" {
 # 3. Instância EC2 (T2.Micro - Free Tier) que rodará o Docker de forma transparente
 resource "aws_instance" "app_server" {
   ami           = data.aws_ami.amazon_linux_2023.id
-  instance_type = "t2.micro"
+  instance_type = "t3.micro"
 
   vpc_security_group_ids = [aws_security_group.api_sg.id]
 

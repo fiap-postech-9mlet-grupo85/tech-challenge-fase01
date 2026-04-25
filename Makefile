@@ -5,7 +5,7 @@ PIP = $(VENV_BIN)/pip
 PYTEST = $(VENV_BIN)/pytest
 RUFF = $(VENV_BIN)/ruff
 
-.PHONY: venv install clean lint format download-data test train run-api docker-build docker-run
+.PHONY: venv install clean lint format download-data test train run-api docker-build docker-run tf-init tf-plan tf-apply tf-destroy
 
 # Regra para criar o ambiente virtual caso não exista
 $(VENV)/bin/activate:
@@ -44,3 +44,16 @@ docker-build:
 
 docker-run:
 	docker run -p 8000:8000 telco-churn-api:latest
+
+# --- Nuvem AWS (Terraform) ---
+tf-init:
+	cd terraform && terraform init
+
+tf-plan:
+	cd terraform && terraform plan
+
+tf-apply:
+	cd terraform && terraform apply -auto-approve
+
+tf-destroy:
+	cd terraform && terraform destroy -auto-approve

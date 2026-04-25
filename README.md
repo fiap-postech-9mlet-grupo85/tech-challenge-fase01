@@ -47,6 +47,8 @@ A estrutura de software que suporta o modelo em produção.
 * **Governança Pós-Deploy**:
     * [**Model Card**](docs/model-card.md): Documentação técnica sobre performance, vieses e limitações do modelo.
     * [**Plano de Monitoramento**](docs/monitoring.md): Estratégia de alertas e métricas pós-deploy.
+* **Infraestrutura Cloud**:
+    * [**Arquitetura AWS**](docs/infrastructure.md): Diagrama e detalhes do deploy em produção via Terraform.
 
 ---
 
@@ -104,6 +106,29 @@ Para garantir a saúde do software desenvolvido, a suíte de testes do Pytest co
    ```
    A API subirá na porta 8000. Acesse [http://localhost:8000/docs](http://localhost:8000/docs) para enviar predições em tempo real pela interface gráfica.
 
+10. **Testando via Postman:** Há uma coleção pré-configurada na pasta `tools/postman/Telco_Churn_API.postman_collection.json`.
+    * Abra o Postman e clique em **Import** (ou arraste o arquivo).
+    * A coleção possui uma variável chamada `base_url` que por padrão vem como `http://localhost:8000`. Teste os requests localmente.
+    * **Testando na AWS:** Quando a sua nuvem estiver de pé (veja a próxima seção), basta você clicar na aba *Variables* da coleção no Postman e trocar o valor de `base_url` de `http://localhost:8000` para a URL gerada do seu **CloudFront** (ex: `https://d3v3l0p3r.cloudfront.net`). Com uma única troca, os três testes já poderão acessar a API na nuvem!
+
+11. **Testando via Shell Script (cURL e WGET):** Existem scripts Bash interativos (`test_api_curl.sh` e `test_api_wget.sh`) desenvolvidos para estressar a API via linha de comando. Ambos executam a mesma suíte de três baterias:
+    * **Bateria 1:** Dispara um `GET /health` garantindo que o servidor subiu sem Cold Start.
+    * **Bateria 2:** Dispara um `POST /predict` com o JSON do "cliente ideal", retornando o Score de probabilidade formatado via `jq`.
+    * **Bateria 3:** Dispara um `POST /predict` forçando uma anomalia (removendo a chave `MonthlyCharges`), garantindo que o Pydantic barre o Request com um HTTP 422.
+    
+    **Como usar localmente (porta 8000):**
+    ```bash
+    ./tools/scripts/test_api_curl.sh
+    # ou
+    ./tools/scripts/test_api_wget.sh
+    ```
+    **Como testar na Nuvem AWS:** Passe a URL gerada pelo seu CloudFront como argumento!
+    ```bash
+    ./tools/scripts/test_api_curl.sh "https://seu-dominio.cloudfront.net"
+    # ou
+    ./tools/scripts/test_api_wget.sh "https://seu-dominio.cloudfront.net"
+    ```
+
 ### 📊 Acompanhamento de Experimentos (MLflow UI)
 O MLflow é o nosso repositório de governança. Para visualizar o comparativo de métricas, os hiperparâmetros campeões e acessar os artefatos serializados (tanto da Fase 1 quanto da Fase 2):
 1. Com o ambiente virtual ativado, suba o servidor a partir da raiz do repositório:
@@ -116,6 +141,28 @@ O MLflow é o nosso repositório de governança. Para visualizar o comparativo d
    * **`churn_mlp_pytorch`**: Contém o histórico da Etapa 2 (A Rede Neural inicial e as Sub-Runs aninhadas do Grid Search).
    * **`churn_mlp_pytorch_modular`**: Contém o rastreio da automação corporativa (Etapa 3), gravando logs isolados do script `train_model.py`.
 
+
+### ☁️ Deploy na Nuvem AWS (Produção)
+O projeto conta com Infraestrutura como Código (Terraform) para criar um ambiente grátis (Free-Tier) na AWS do Brasil (`sa-east-1`). A arquitetura engloba uma máquina EC2 executando o Docker com proteção HTTPS via CloudFront. Você tem duas opções para subir a API:
+
+**Opção A: Via Github Actions (Recomendado)**
+1. Cadastre os Secrets `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY` no seu repositório.
+2. Acesse a aba **Actions** > **IaC - Terraform AWS Deploy**.
+3. Clique em *Run workflow* com o parâmetro `apply` para criar, ou `destroy` para destruir. A URL da API aparecerá nos logs finais do Job.
+
+**Opção B: Via Terminal Local (Makefile)**
+1. Exporte suas credenciais da AWS no terminal:
+   ```bash
+   export AWS_ACCESS_KEY_ID="sua_chave"
+   export AWS_SECRET_ACCESS_KEY="seu_segredo"
+   ```
+2. Inicialize o projeto e suba a infraestrutura:
+   ```bash
+   make tf-init
+   make tf-apply
+   ```
+3. A URL segura do CloudFront (HTTPS) será cuspida na tela do terminal.
+4. Para desligar e evitar custos residuais, rode: `make tf-destroy`.
 
 ---
 
