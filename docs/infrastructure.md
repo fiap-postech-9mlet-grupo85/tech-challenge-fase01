@@ -6,20 +6,20 @@ Para provisionar o modelo preditivo em nuvem garantindo os requisitos de **Custo
 
 ```mermaid
 flowchart TD
-    User([Usuário Externo / Banca]) -->|HTTPS (Porta 443)| CF[AWS CloudFront\n(Proxy Reverso Dinâmico)]
+    User(["Usuário Externo / Banca"]) -->|"HTTPS (Porta 443)"| CF["AWS CloudFront\n(Proxy Reverso Dinâmico)"]
     
     subgraph "AWS Public Cloud (sa-east-1)"
-        CF -->|HTTP (Porta 8000)| EC2[AWS EC2\nt2.micro Free Tier]
+        CF -->|"HTTP (Porta 8000)"| EC2["AWS EC2\nt2.micro Free Tier"]
         
         subgraph "Ambiente Dockerizado"
-            EC2 --> Docker[Docker Daemon]
-            Docker --> FastAPI[FastAPI Container\n(Telco Churn API)]
-            FastAPI --> Model[(Modelo .pth\ne Sklearn)]
+            EC2 --> Docker["Docker Daemon"]
+            Docker --> FastAPI["FastAPI Container\n(Telco Churn API)"]
+            FastAPI --> Model[("Modelo .pth\ne Sklearn")]
         end
     end
     
-    GH[Github Actions\n(Pipeline)] -.->|Docker Push| DH[Docker Hub Público]
-    DH -.->|Docker Pull (boot)| EC2
+    GH["Github Actions\n(Pipeline)"] -.->|"Docker Push"| DH["Docker Hub Público"]
+    DH -.->|"Docker Pull (boot)"| EC2
     
     style CF fill:#f90,stroke:#333,stroke-width:2px,color:#fff
     style EC2 fill:#f99,stroke:#333,stroke-width:2px,color:#fff

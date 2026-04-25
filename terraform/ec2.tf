@@ -40,7 +40,15 @@ resource "aws_instance" "app_server" {
   # User Data: Script que roda magicamente no boot da máquina
   user_data = <<-EOF
               #!/bin/bash
-              # Atualiza os pacotes e instala o Docker
+              
+              # 1. Cria 2GB de Swap para proteger a máquina t3.micro (1GB RAM) contra OOM Killer
+              dd if=/dev/zero of=/swapfile bs=128M count=16
+              chmod 600 /swapfile
+              mkswap /swapfile
+              swapon /swapfile
+              echo "/swapfile swap swap defaults 0 0" >> /etc/fstab
+
+              # 2. Atualiza os pacotes e instala o Docker
               dnf update -y
               dnf install -y docker
               

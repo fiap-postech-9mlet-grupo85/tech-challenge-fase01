@@ -18,6 +18,8 @@ COPY pyproject.toml /app/
 
 # Instala as dependências via pip
 RUN pip install --no-cache-dir --upgrade pip
+# Instala o PyTorch CPU-only PRIMEIRO para evitar o download do CUDA (reduz imagem de 3GB para 500MB)
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
 RUN pip install --no-cache-dir -e .
 
 # Copia o código-fonte e os modelos binários
