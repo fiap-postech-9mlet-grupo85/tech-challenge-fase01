@@ -111,6 +111,24 @@ Para garantir a saúde do software desenvolvido, a suíte de testes do Pytest co
     * A coleção possui uma variável chamada `base_url` que por padrão vem como `http://localhost:8000`. Teste os requests localmente.
     * **Testando na AWS:** Quando a sua nuvem estiver de pé (veja a próxima seção), basta você clicar na aba *Variables* da coleção no Postman e trocar o valor de `base_url` de `http://localhost:8000` para a URL gerada do seu **CloudFront** (ex: `https://d3v3l0p3r.cloudfront.net`). Com uma única troca, os três testes já poderão acessar a API na nuvem!
 
+11. **Testando via Shell Script (cURL e WGET):** Existem scripts Bash interativos (`test_api_curl.sh` e `test_api_wget.sh`) desenvolvidos para estressar a API via linha de comando. Ambos executam a mesma suíte de três baterias:
+    * **Bateria 1:** Dispara um `GET /health` garantindo que o servidor subiu sem Cold Start.
+    * **Bateria 2:** Dispara um `POST /predict` com o JSON do "cliente ideal", retornando o Score de probabilidade formatado via `jq`.
+    * **Bateria 3:** Dispara um `POST /predict` forçando uma anomalia (removendo a chave `MonthlyCharges`), garantindo que o Pydantic barre o Request com um HTTP 422.
+    
+    **Como usar localmente (porta 8000):**
+    ```bash
+    ./tools/scripts/test_api_curl.sh
+    # ou
+    ./tools/scripts/test_api_wget.sh
+    ```
+    **Como testar na Nuvem AWS:** Passe a URL gerada pelo seu CloudFront como argumento!
+    ```bash
+    ./tools/scripts/test_api_curl.sh "https://seu-dominio.cloudfront.net"
+    # ou
+    ./tools/scripts/test_api_wget.sh "https://seu-dominio.cloudfront.net"
+    ```
+
 ### 📊 Acompanhamento de Experimentos (MLflow UI)
 O MLflow é o nosso repositório de governança. Para visualizar o comparativo de métricas, os hiperparâmetros campeões e acessar os artefatos serializados (tanto da Fase 1 quanto da Fase 2):
 1. Com o ambiente virtual ativado, suba o servidor a partir da raiz do repositório:
