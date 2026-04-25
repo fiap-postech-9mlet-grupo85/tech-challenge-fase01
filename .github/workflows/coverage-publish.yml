@@ -37,6 +37,7 @@ jobs:
       - name: Generate Coverage Badge
         run: |
           coverage-badge -o htmlcov/coverage.svg -f
+          rm -f htmlcov/.gitignore
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
