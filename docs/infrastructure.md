@@ -6,7 +6,7 @@ Para provisionar o modelo preditivo em nuvem garantindo os requisitos de **Custo
 
 ```mermaid
 flowchart TD
-    User(["Usuário Externo / Banca"]) -->|"Acessa https://telcochurn.cloud-ip.cc"| DNS["ClouDNS\n(Resolução de Nome)"]
+    User(["Usuário Externo / Banca"]) -->|"HTTPS\n(telcochurn.cloud-ip.cc)"| DNS["ClouDNS\n(Resolução de Nome)"]
     DNS -->|"CNAME"| CF["AWS CloudFront\n(Proxy Reverso Dinâmico)"]
     
     subgraph "AWS Public Cloud (sa-east-1)"
