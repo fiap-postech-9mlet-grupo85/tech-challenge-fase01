@@ -10,7 +10,7 @@ flowchart TD
     DNS -->|"CNAME"| CF["AWS CloudFront\n(Proxy Reverso Dinâmico)"]
     
     subgraph "AWS Public Cloud (sa-east-1)"
-        CF -->|"HTTP (Porta 8000)"| EC2["AWS EC2\nt2.micro Free Tier"]
+        CF -->|"HTTP (Porta 8000)"| EC2["AWS EC2\nt3.micro Free Tier"]
         
         subgraph "Ambiente Dockerizado"
             EC2 --> Docker["Docker Daemon"]
