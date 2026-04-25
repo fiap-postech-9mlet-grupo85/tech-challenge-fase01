@@ -1,10 +1,10 @@
 # Tech Challenge - Fase 1: ML Engineering (FIAP)
 
-[![Coverage](https://fiap-postech-9mlet-grupo32.github.io/tech-challenge-fase01/coverage.svg)](https://fiap-postech-9mlet-grupo32.github.io/tech-challenge-fase01/)
+[![Coverage](https://fiap-postech-9mlet-grupo85.github.io/tech-challenge-fase01/coverage.svg)](https://fiap-postech-9mlet-grupo85.github.io/tech-challenge-fase01/)
 
 **Curso:** FIAP Pós Tech - Machine Learning Engineering  
 **Turma:** 9MLET  
-**Autores (Grupo 32):**
+**Autores (Grupo 85):**
 * Bruno Machado Abreu (RM372965)
 * Renan Prado Gonzalez (RM374089)
 * Davi Coene Rosa (RM371466)
@@ -175,7 +175,9 @@ Você tem duas opções para subir a API:
 ---
 
 ## 📺 Entrega Final
-* **Vídeo STAR:** [Coloque aqui o Link para o seu vídeo no YouTube].
+* **Vídeo STAR (Pitch):** 
+  
+  [![Pitch - Tech Challenge](https://img.youtube.com/vi/3OpsjKj8Zlw/hqdefault.jpg)](https://www.youtube.com/watch?v=3OpsjKj8Zlw)
 
 ### 🔗 Endpoints Oficiais (Produção AWS)
 A API está pública, respondendo via HTTPS e protegida contra ataques volumétricos pelo CloudFront:

@@ -7,5 +7,5 @@ variable "aws_region" {
 variable "docker_image" {
   description = "Imagem do Docker Hub a ser baixada e executada"
   type        = string
-  default     = "fiappostech9mletgrupo32/telco-churn-api:latest"
+  default     = "fiappostech9mletgrupo85/telco-churn-api:latest"
 }

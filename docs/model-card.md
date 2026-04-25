@@ -2,7 +2,7 @@
 
 ## 1. Detalhes do Modelo
 * **Nome do Modelo:** Telco Churn MLP (PyTorch)
-* **Desenvolvedores:** Grupo 32 (FIAP Pós Tech)
+* **Desenvolvedores:** Grupo 85 (FIAP Pós Tech)
 * **Tipo do Modelo:** Rede Neural Densa (Feed-Forward Neural Network) para Classificação Binária.
 * **Arquitetura (Camadas):** `Input Dim -> Linear(64) -> ReLU -> Dropout(p=0.3) -> Linear(32) -> ReLU -> Dropout(p=0.3) -> Linear(1)`
 * **Função de Perda (Loss):** `BCEWithLogitsLoss` (Binary Cross Entropy) com parâmetro `pos_weight` calculado dinamicamente para compensar o desbalanceamento de classes nativo.
