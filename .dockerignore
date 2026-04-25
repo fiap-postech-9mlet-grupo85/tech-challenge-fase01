@@ -1,0 +1,21 @@
+# Diretórios Virtuais
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Dados brutos (não devemos jogar os CSVs para a produção)
+data/
+
+# Experimentos e Notebooks
+notebooks/
+mlruns/
+mlflow.db
+
+# Configurações locais do Git e IDEs
+.git/
+.vscode/
+.idea/
+.pytest_cache/
+.ruff_cache/

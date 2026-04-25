@@ -1,0 +1,65 @@
+name: CI/CD Pipeline - Docker Hub
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    name: Run Pytest and Ruff
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+          cache-dependency-path: 'pyproject.toml'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+          
+      - name: Run Ruff Linting
+        run: ruff check .
+
+      - name: Run Tests
+        run: PYTHONPATH=. pytest tests/ -v
+
+  build-and-push:
+    name: Build and Push Docker Image
+    needs: test
+    runs-on: ubuntu-latest
+    # Esse job só roda no PUSH da branch main (Não roda em PR, pois não queremos quebrar imagens em produção antes do merge)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          # A tag gerada sempre apontará para o seu repositório no Docker Hub
+          # O Docker Hub criará o repositório 'telco-churn-api' automaticamente como 'Público' no primeiro push.
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/telco-churn-api:latest, ${{ secrets.DOCKERHUB_USERNAME }}/telco-churn-api:${{ github.sha }}
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/telco-churn-api:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/telco-churn-api:buildcache,mode=max
