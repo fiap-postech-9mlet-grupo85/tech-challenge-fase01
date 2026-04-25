@@ -16,3 +16,9 @@ terraform {
 provider "aws" {
   region = var.aws_region
 }
+
+# Provider específico para o ACM (A AWS exige que certificados do CloudFront fiquem na Virgínia)
+provider "aws" {
+  alias  = "us_east_1"
+  region = "us-east-1"
+}
