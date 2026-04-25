@@ -4,10 +4,12 @@
 * **Nome do Modelo:** Telco Churn MLP (PyTorch)
 * **Desenvolvedores:** Grupo 32 (FIAP Pós Tech)
 * **Tipo do Modelo:** Rede Neural Densa (Feed-Forward Neural Network) para Classificação Binária.
+* **Arquitetura (Camadas):** `Input Dim -> Linear(64) -> ReLU -> Dropout(p=0.3) -> Linear(32) -> ReLU -> Dropout(p=0.3) -> Linear(1)`
+* **Função de Perda (Loss):** `BCEWithLogitsLoss` (Binary Cross Entropy) com parâmetro `pos_weight` calculado dinamicamente para compensar o desbalanceamento de classes nativo.
+* **Otimizador & Hiperparâmetros:** Algoritmo `Adam` com Learning Rate de `0.001` e Batch Size de `64` (definidos via Grid Search). Treinamento regularizado com Early Stopping (Patience = 10 épocas).
 * **Versão:** 1.0.0
 * **Data da Modelagem:** Abril de 2026
 * **Licença:** MIT
-* **Dúvidas Técnicas:** Repositório do projeto
 
 ## 2. Uso Pretendido (Intended Use)
 * **Uso Primário:** Identificar se um cliente de telefonia/internet tem alto risco de cancelar sua assinatura (Churn = Yes). 
@@ -22,20 +24,21 @@
 A validação do modelo foi focada no custo financeiro do negócio.
 * **Métrica Principal Otimizada:** `Recall` (Sensibilidade). Escolhida para mitigar Falsos Negativos (deixar um cliente cancelar sem oferecer retenção).
 * **Limiar de Negócio (Business Threshold):** `0.30` (30%). 
-    * *Justificativa:* Definido no ML Canvas. O custo de perder o cliente (R$ 1.000) é 20x maior que o custo de tentar retê-lo (R$ 50). Um threshold baixo aumenta a abrangência defensiva da operadora.
-* **Métricas de Performance (Validação Cruzada):**
-    * **AUC-ROC:** ~0.84
-    * **PR-AUC:** ~0.65
-    * **Recall (no limiar ótimo):** ~0.80
+    * *Justificativa:* Definido no ML Canvas. O custo de perder o cliente (R$ 1.000) é 20x maior que o custo de tentar retê-lo (R$ 50). Um threshold baixo aumenta a abrangência defensiva da operadora, penalizando precisão em favor do recall.
+* **Métricas de Performance (Resultados do Grid Search no Test Set):**
+    * **AUC-ROC:** `0.8459`
+    * **F1-Score Máximo:** `0.6311`
+    * **Recall (no limiar ótimo):** `0.8075` (80.75% dos clientes prestes a cancelar foram identificados corretamente).
 
 ## 5. Dados de Treinamento e Avaliação
 * **Origem dos Dados:** IBM Telco Customer Churn Dataset.
 * **Volume:** 7.043 instâncias originais.
-* **Divisão de Validação:** Stratified Holdout (80% Treino / 20% Teste). O `stratify=y` garantiu a mesma proporção de Churn em ambos os conjuntos.
-* **Pré-Processamento:** 
-    * `TotalCharges`: Conversão de *blank strings* para `0.0`.
-    * Imputação via `ColumnTransformer` (StandardScaler para numéricas e OneHotEncoder para categóricas).
-    * `pos_weight`: O dataset possui desbalanceamento severo (~73% No Churn / 27% Yes Churn). O PyTorch utiliza o cálculo dinâmico de `pos_weight` na `BCEWithLogitsLoss` para compensar as classes.
+* **Divisão de Validação:** Stratified Holdout (80% Treino / 20% Teste). O parâmetro `stratify=y` do Scikit-Learn garantiu a mesma proporção de Churn (~27%) em ambos os conjuntos, vital para a estabilidade da métrica AUC.
+* **Engenharia de Features e Pipeline de Pré-Processamento:** 
+    * Tratamento de anomalias: Coluna `TotalCharges` convertida para numérico com coerção de *blank strings* para nulo, sendo posteriormente imputada.
+    * Orquestração via `ColumnTransformer`: Todas as features numéricas (`tenure`, `MonthlyCharges`, `TotalCharges`) sofreram padronização via `StandardScaler`. Todas as categóricas (ex: `Contract`, `InternetService`) foram binadas via `OneHotEncoder(drop='first')` para evitar colinearidade.
+    * A estrutura final alimentou a rede neural PyTorch (instanciada dinamicamente com `input_dim` igual ao formato gerado pós-OneHotEncoder).
+* **Desbalanceamento:** O dataset possui desbalanceamento severo (~73% No Churn / 27% Yes Churn). Ao invés de usar técnicas artificiais (SMOTE), o PyTorch utilizou o cálculo dinâmico estatístico inserido na matriz da `BCEWithLogitsLoss` (`pos_weight`) para atribuir maior peso no gradiente aos Falsos Negativos durante a retropropagação.
 
 ## 6. Advertências e Recomendações
 * **Revisão de Limiar:** Caso o ticket médio da operadora suba ou o custo de retenção mude, a matriz de custos descrita no ML Canvas se tornará obsoleta, e o Threshold de `0.30` no `predict_model.py` deve ser recalibrado.
