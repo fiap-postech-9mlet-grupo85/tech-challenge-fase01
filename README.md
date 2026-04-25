@@ -175,5 +175,14 @@ Você tem duas opções para subir a API:
 ---
 
 ## 📺 Entrega Final
-* **Vídeo STAR:** [Link para o vídeo de 5 minutos explicando o projeto].
-* **Deploy (Opcional):** .
+* **Vídeo STAR:** [Coloque aqui o Link para o seu vídeo no YouTube].
+
+### 🔗 Endpoints Oficiais (Produção AWS)
+A API está pública, respondendo via HTTPS e protegida contra ataques volumétricos pelo CloudFront:
+
+* **Swagger UI (Documentação Interativa):** [GET /docs](https://api.telcochurn.cloud-ip.cc/docs)
+* **ReDoc (Documentação Alternativa):** [GET /redoc](https://api.telcochurn.cloud-ip.cc/redoc)
+* **Health Check (Monitoramento):** [GET /health](https://api.telcochurn.cloud-ip.cc/health)
+* **Inferência de Churn:** `POST https://api.telcochurn.cloud-ip.cc/v1/predict`
+  * *Headers:* `Content-Type: application/json`
+  * *Body:* JSON com os dados demográficos e contratuais do cliente (veja o Swagger para o schema exato).
