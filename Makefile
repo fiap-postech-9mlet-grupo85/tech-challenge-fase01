@@ -5,7 +5,7 @@ PIP = $(VENV_BIN)/pip
 PYTEST = $(VENV_BIN)/pytest
 RUFF = $(VENV_BIN)/ruff
 
-.PHONY: venv install clean lint format download-data test train run-api
+.PHONY: venv install clean lint format download-data test train run-api docker-build docker-run
 
 # Regra para criar o ambiente virtual caso não exista
 $(VENV)/bin/activate:
@@ -38,3 +38,9 @@ train: venv
 
 run-api: venv
 	PYTHONPATH=. $(VENV_BIN)/uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
+
+docker-build:
+	docker build -t telco-churn-api:latest .
+
+docker-run:
+	docker run -p 8000:8000 telco-churn-api:latest
