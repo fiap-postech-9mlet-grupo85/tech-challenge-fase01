@@ -107,47 +107,46 @@ resource "aws_acm_certificate" "api_cert" {
 }
 
 # 5. AWS CloudFront: Para termos uma URL HTTPS segura e customizada
-# [DESABILITADO TEMPORARIAMENTE PARA VALIDAÇÃO DO DOMÍNIO CLOUDNS]
-# resource "aws_cloudfront_distribution" "api_cdn" {
-#   enabled = true
-#   aliases = ["telcochurn.cloud-ip.cc"]
-#
-#   origin {
-#     domain_name = aws_instance.app_server.public_dns
-#     origin_id   = "EC2Origin"
-#
-#     custom_origin_config {
-#       http_port              = 8000
-#       https_port             = 443
-#       origin_protocol_policy = "http-only"
-#       origin_ssl_protocols   = ["TLSv1.2"]
-#     }
-#   }
-#
-#   default_cache_behavior {
-#     target_origin_id       = "EC2Origin"
-#     viewer_protocol_policy = "redirect-to-https"
-#     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-#     cached_methods         = ["GET", "HEAD"]
-#     
-#     forwarded_values {
-#       query_string = true
-#       headers      = ["*"]
-#       cookies {
-#         forward = "all"
-#       }
-#     }
-#   }
-#
-#   restrictions {
-#     geo_restriction {
-#       restriction_type = "none"
-#     }
-#   }
-#
-#   viewer_certificate {
-#     acm_certificate_arn      = aws_acm_certificate.api_cert.arn
-#     ssl_support_method       = "sni-only"
-#     minimum_protocol_version = "TLSv1.2_2021"
-#   }
-# }
+resource "aws_cloudfront_distribution" "api_cdn" {
+  enabled = true
+  aliases = ["telcochurn.cloud-ip.cc"]
+
+  origin {
+    domain_name = aws_instance.app_server.public_dns
+    origin_id   = "EC2Origin"
+
+    custom_origin_config {
+      http_port              = 8000
+      https_port             = 443
+      origin_protocol_policy = "http-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+  }
+
+  default_cache_behavior {
+    target_origin_id       = "EC2Origin"
+    viewer_protocol_policy = "redirect-to-https"
+    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+    cached_methods         = ["GET", "HEAD"]
+    
+    forwarded_values {
+      query_string = true
+      headers      = ["*"]
+      cookies {
+        forward = "all"
+      }
+    }
+  }
+
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+    }
+  }
+
+  viewer_certificate {
+    acm_certificate_arn      = aws_acm_certificate.api_cert.arn
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
+  }
+}

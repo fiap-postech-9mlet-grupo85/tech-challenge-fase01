@@ -13,7 +13,12 @@ output "acm_validation_cname_value" {
   value       = tolist(aws_acm_certificate.api_cert.domain_validation_options)[0].resource_record_value
 }
 
-# output "cloudfront_secure_url" {
-#   description = "Acesso Oficial da API (HTTPS, CloudFront Gratuito)"
-#   value       = "https://${aws_cloudfront_distribution.api_cdn.domain_name}/docs"
-# }
+output "cloudfront_secure_url_aws" {
+  description = "Acesso pela URL nativa da AWS (Garantia de que o CloudFront subiu)"
+  value       = "https://${aws_cloudfront_distribution.api_cdn.domain_name}/docs"
+}
+
+output "api_custom_domain" {
+  description = "Acesso final oficial da Banca (Seu domínio ClouDNS)"
+  value       = "https://telcochurn.cloud-ip.cc/docs"
+}
