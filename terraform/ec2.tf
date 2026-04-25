@@ -91,8 +91,28 @@ resource "aws_instance" "app_server" {
               # Adiciona o usuário ec2-user ao grupo docker
               usermod -aG docker ec2-user
               
-              # Baixa a imagem do Docker Hub e roda o container na porta 8000
+              # 3. Cria um script de inicialização que roda em TODO REBOOT da máquina
+              # Ele vai ignorar o cache local, forçar o download da imagem nova e recriar o container
+              cat << 'SCRIPT' > /var/lib/cloud/scripts/per-boot/01-update-docker.sh
+              #!/bin/bash
+              systemctl start docker
+              
+              echo "Limpando containers e imagens antigas para liberar HD..."
+              docker stop $(docker ps -aq) || true
+              docker rm $(docker ps -aq) || true
+              docker system prune -a -f
+              
+              echo "Atualizando imagem do Docker Hub..."
+              docker pull ${var.docker_image}
+              
+              echo "Iniciando novo container..."
               docker run -d -p 8000:8000 --restart always ${var.docker_image}
+              SCRIPT
+              
+              chmod +x /var/lib/cloud/scripts/per-boot/01-update-docker.sh
+              
+              # Executa o script agora para o primeiro boot
+              /var/lib/cloud/scripts/per-boot/01-update-docker.sh
               EOF
 
   tags = {
