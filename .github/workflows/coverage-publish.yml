@@ -1,0 +1,46 @@
+name: CI/CD Pipeline - Test Coverage Pages
+
+on:
+  push:
+    branches: [ "main" ]
+
+# Concedendo permissão de escrita explicitamente (Solução 1 para ambientes corporativos bloqueados)
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy-coverage:
+    name: Generate and Deploy Test Coverage
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+          cache-dependency-path: 'pyproject.toml'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+          pip install coverage-badge
+
+      - name: Run Tests and Generate HTML Report
+        run: |
+          PYTHONPATH=. pytest tests/ -v --cov=src --cov-report=html
+          
+      - name: Generate Coverage Badge
+        run: |
+          coverage-badge -o htmlcov/coverage.svg -f
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./htmlcov
+          commit_message: "docs(coverage): update test coverage report and badge"
