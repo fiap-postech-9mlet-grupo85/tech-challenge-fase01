@@ -1,7 +1,7 @@
 import logging
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, APIRouter
+from fastapi import APIRouter, FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 
 from src.models.predict_model import load_artifacts, predict_churn
@@ -45,6 +45,7 @@ app = FastAPI(
 # Cria o Router da Versão 1 (v1)
 v1_router = APIRouter(prefix="/v1")
 
+
 @app.get("/health", tags=["Monitoring"])
 def health_check():
     """
@@ -77,6 +78,7 @@ def predict(customer: CustomerRequest):
         # Erros não mapeados (ex: PyTorch quebrou a matriz) viram Internal Server Error 500
         logger.error(f"Internal Server Error no Forward Pass: {e}")
         raise HTTPException(status_code=500, detail="Erro interno no Motor de Predição")
+
 
 # Registra o Router v1 no App Principal
 app.include_router(v1_router)
