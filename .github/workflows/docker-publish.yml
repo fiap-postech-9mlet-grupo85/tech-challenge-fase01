@@ -63,3 +63,39 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/telco-churn-api:latest, ${{ secrets.DOCKERHUB_USERNAME }}/telco-churn-api:${{ github.sha }}
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/telco-churn-api:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/telco-churn-api:buildcache,mode=max
+
+  deploy-to-aws:
+    name: Continuous Deployment (SSM)
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: "sa-east-1"
+      DOCKER_IMAGE: "${{ secrets.DOCKERHUB_USERNAME }}/telco-churn-api:latest"
+
+    steps:
+      - name: Deploy via AWS SSM
+        run: |
+          echo "Buscando ID da instância EC2 ligada..."
+          INSTANCE_ID=$(aws ec2 describe-instances --region $AWS_REGION --filters "Name=tag:Name,Values=Telco-Churn-API-Serverless-Node" "Name=instance-state-name,Values=running" --query "Reservations[0].Instances[0].InstanceId" --output text)
+          
+          if [ "$INSTANCE_ID" == "None" ] || [ -z "$INSTANCE_ID" ]; then
+            echo "Nenhuma instância EC2 ligada encontrada. Pulando o deploy automático."
+            exit 0
+          fi
+
+          echo "Enviando comando de atualização do Docker para a máquina $INSTANCE_ID..."
+          COMMANDS='["docker pull '$DOCKER_IMAGE'", "docker rm -f $(docker ps -aq) || true", "docker run -d -p 8000:8000 --restart always '$DOCKER_IMAGE'"]'
+          
+          COMMAND_ID=$(aws ssm send-command \
+            --region $AWS_REGION \
+            --instance-ids "$INSTANCE_ID" \
+            --document-name "AWS-RunShellScript" \
+            --parameters "commands=$COMMANDS" \
+            --comment "Atualizando container Docker do Telco Churn" \
+            --query "Command.CommandId" --output text)
+            
+          echo "Comando SSM enviado com sucesso (ID: $COMMAND_ID). A imagem está sendo atualizada no servidor."
