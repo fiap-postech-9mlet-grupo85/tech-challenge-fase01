@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket = "fiappostech9mletgrupo32-fase01-tfstate"
+    bucket = "fiappostech9mletgrupo85-fase01-tfstate"
     key    = "terraform.tfstate"
     region = "sa-east-1"
   }
