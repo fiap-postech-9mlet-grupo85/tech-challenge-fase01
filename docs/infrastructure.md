@@ -6,10 +6,11 @@ Para provisionar o modelo preditivo em nuvem garantindo os requisitos de **Custo
 
 ```mermaid
 flowchart TD
-    User(["Usuário Externo / Banca"]) -->|"HTTPS (Porta 443)"| CF["AWS CloudFront\n(Proxy Reverso Dinâmico)"]
+    User(["Usuário Externo / Banca"]) -->|"HTTPS\n(api.telcochurn.cloud-ip.cc)"| DNS["ClouDNS\n(Resolução de Nome)"]
+    DNS -->|"CNAME"| CF["AWS CloudFront\n(Proxy Reverso Dinâmico)"]
     
     subgraph "AWS Public Cloud (sa-east-1)"
-        CF -->|"HTTP (Porta 8000)"| EC2["AWS EC2\nt2.micro Free Tier"]
+        CF -->|"HTTP (Porta 8000)"| EC2["AWS EC2\nt3.micro Free Tier"]
         
         subgraph "Ambiente Dockerizado"
             EC2 --> Docker["Docker Daemon"]
@@ -34,9 +35,13 @@ A computação é baseada em uma máquina Amazon Linux 2023. O grande trunfo arq
 * A máquina é instanciada e, através de um script de **User Data**, ela atualiza os pacotes essenciais, instala o Docker, realiza o *Pull* da imagem oficial da API e roda o serviço. 
 * Trata-se de um "Serverless improvisado" para garantir o custo zero no longo prazo.
 
-### 2. AWS CloudFront
-Sistemas expostos em IPs públicos puros são penalizados por navegadores pela ausência de SSL (Cadeado Verde).
-Utilizamos o CloudFront — não para seu cache agressivo, mas para sua **camada de Proxy Reverso gratuita**. Ele engloba nossa instância e injeta um certificado TLS de ponta, disponibilizando um domínio seguro do tipo `.cloudfront.net` (ex: `https://d3qvwxxzyy.cloudfront.net`).
+### 2. AWS CloudFront & ACM (Custom Domain)
+Sistemas expostos em IPs públicos puros são penalizados por navegadores pela ausência de SSL (Cadeado Verde). Utilizamos o CloudFront como **Proxy Reverso gratuito** para englobar nossa instância. 
+
+Para alcançar excelência de mercado sem custo, utilizamos:
+* **ClouDNS**: Provedor externo gratuito que permite Gestão de Zona DNS. Registramos o subdomínio `api.telcochurn.cloud-ip.cc`.
+* **AWS Certificate Manager (ACM)**: Emitimos um certificado TLS/SSL oficial na região da Virgínia (`us-east-1`), comprovando a posse do domínio via registro CNAME no ClouDNS.
+* Com o certificado acoplado ao CloudFront, garantimos acesso HTTPS através de um domínio completamente amigável à banca, mascarando a infraestrutura subjacente.
 
 ### 3. Terraform (Infraestrutura como Código)
 Todos os componentes citados são provisionados pelo manifesto localizado em `terraform/`. 

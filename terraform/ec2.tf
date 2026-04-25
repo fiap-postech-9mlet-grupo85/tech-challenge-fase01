@@ -9,17 +9,22 @@ data "aws_ami" "amazon_linux_2023" {
   }
 }
 
+# 1.5 Obter a lista oficial de IPs do CloudFront gerenciada pela AWS
+data "aws_ec2_managed_prefix_list" "cloudfront" {
+  name = "com.amazonaws.global.cloudfront.origin-facing"
+}
+
 # 2. Security Group: Permitir entrada apenas na porta HTTP para a API e SSH para emergência
 resource "aws_security_group" "api_sg" {
   name        = "telco_churn_api_sg"
   description = "Permitir trafego web para a API do Telco Churn"
 
   ingress {
-    description = "HTTP Port for FastAPI"
-    from_port   = 8000
-    to_port     = 8000
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # O ideal seria apenas o range do CloudFront, mas simplificamos para o Free Tier
+    description     = "HTTP Port for FastAPI (Only from CloudFront)"
+    from_port       = 8000
+    to_port         = 8000
+    protocol        = "tcp"
+    prefix_list_ids = [data.aws_ec2_managed_prefix_list.cloudfront.id]
   }
 
   egress {
@@ -98,7 +103,7 @@ resource "aws_instance" "app_server" {
 # 4. AWS ACM Certificate: Solicitando certificado SSL gratuito na Virgínia
 resource "aws_acm_certificate" "api_cert" {
   provider          = aws.us_east_1
-  domain_name       = "telcochurn.cloud-ip.cc"
+  domain_name       = "api.telcochurn.cloud-ip.cc"
   validation_method = "DNS"
 
   lifecycle {
@@ -107,47 +112,46 @@ resource "aws_acm_certificate" "api_cert" {
 }
 
 # 5. AWS CloudFront: Para termos uma URL HTTPS segura e customizada
-# [DESABILITADO TEMPORARIAMENTE PARA VALIDAÇÃO DO DOMÍNIO CLOUDNS]
-# resource "aws_cloudfront_distribution" "api_cdn" {
-#   enabled = true
-#   aliases = ["telcochurn.cloud-ip.cc"]
-#
-#   origin {
-#     domain_name = aws_instance.app_server.public_dns
-#     origin_id   = "EC2Origin"
-#
-#     custom_origin_config {
-#       http_port              = 8000
-#       https_port             = 443
-#       origin_protocol_policy = "http-only"
-#       origin_ssl_protocols   = ["TLSv1.2"]
-#     }
-#   }
-#
-#   default_cache_behavior {
-#     target_origin_id       = "EC2Origin"
-#     viewer_protocol_policy = "redirect-to-https"
-#     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-#     cached_methods         = ["GET", "HEAD"]
-#     
-#     forwarded_values {
-#       query_string = true
-#       headers      = ["*"]
-#       cookies {
-#         forward = "all"
-#       }
-#     }
-#   }
-#
-#   restrictions {
-#     geo_restriction {
-#       restriction_type = "none"
-#     }
-#   }
-#
-#   viewer_certificate {
-#     acm_certificate_arn      = aws_acm_certificate.api_cert.arn
-#     ssl_support_method       = "sni-only"
-#     minimum_protocol_version = "TLSv1.2_2021"
-#   }
-# }
+resource "aws_cloudfront_distribution" "api_cdn" {
+  enabled = true
+  aliases = ["api.telcochurn.cloud-ip.cc"]
+
+  origin {
+    domain_name = aws_instance.app_server.public_dns
+    origin_id   = "EC2Origin"
+
+    custom_origin_config {
+      http_port              = 8000
+      https_port             = 443
+      origin_protocol_policy = "http-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+  }
+
+  default_cache_behavior {
+    target_origin_id       = "EC2Origin"
+    viewer_protocol_policy = "redirect-to-https"
+    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+    cached_methods         = ["GET", "HEAD"]
+    
+    forwarded_values {
+      query_string = true
+      headers      = ["*"]
+      cookies {
+        forward = "all"
+      }
+    }
+  }
+
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+    }
+  }
+
+  viewer_certificate {
+    acm_certificate_arn      = aws_acm_certificate.api_cert.arn
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
+  }
+}

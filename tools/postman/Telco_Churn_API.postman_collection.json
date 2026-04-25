@@ -44,6 +44,7 @@
 						"{{base_url}}"
 					],
 					"path": [
+						"v1",
 						"predict"
 					]
 				},
@@ -71,6 +72,7 @@
 						"{{base_url}}"
 					],
 					"path": [
+						"v1",
 						"predict"
 					]
 				},

@@ -113,8 +113,8 @@ Para garantir a saúde do software desenvolvido, a suíte de testes do Pytest co
 
 11. **Testando via Shell Script (cURL e WGET):** Existem scripts Bash interativos (`test_api_curl.sh` e `test_api_wget.sh`) desenvolvidos para estressar a API via linha de comando. Ambos executam a mesma suíte de três baterias:
     * **Bateria 1:** Dispara um `GET /health` garantindo que o servidor subiu sem Cold Start.
-    * **Bateria 2:** Dispara um `POST /predict` com o JSON do "cliente ideal", retornando o Score de probabilidade formatado via `jq`.
-    * **Bateria 3:** Dispara um `POST /predict` forçando uma anomalia (removendo a chave `MonthlyCharges`), garantindo que o Pydantic barre o Request com um HTTP 422.
+    * **Bateria 2:** Dispara um `POST /v1/predict` com o JSON do "cliente ideal", retornando o Score de probabilidade formatado via `jq`.
+    * **Bateria 3:** Dispara um `POST /v1/predict` forçando uma anomalia (removendo a chave `MonthlyCharges`), garantindo que o Pydantic barre o Request com um HTTP 422.
     
     **Como usar localmente (porta 8000):**
     ```bash
@@ -143,7 +143,15 @@ O MLflow é o nosso repositório de governança. Para visualizar o comparativo d
 
 
 ### ☁️ Deploy na Nuvem AWS (Produção)
-O projeto conta com Infraestrutura como Código (Terraform) para criar um ambiente grátis (Free-Tier) na AWS do Brasil (`sa-east-1`). A arquitetura engloba uma máquina EC2 executando o Docker com proteção HTTPS via CloudFront. Você tem duas opções para subir a API:
+O projeto conta com Infraestrutura como Código (Terraform) para criar um ambiente grátis (Free-Tier) na AWS do Brasil (`sa-east-1`). A arquitetura engloba uma máquina EC2 executando o Docker com proteção HTTPS via CloudFront.
+
+**Domínio Customizado (AWS ACM + ClouDNS):**
+Para entregar uma experiência profissional, implementamos um domínio limpo e seguro: `https://api.telcochurn.cloud-ip.cc/docs`. O Terraform gera automaticamente um certificado de segurança via AWS ACM e engata esse domínio no CloudFront, mediante a criação de registros CNAME no painel gratuito do ClouDNS.
+
+**Versionamento Semântico (v1):**
+Visando aderência a padrões arquiteturais corporativos, a API implementa roteamento versionado (`/v1`). Isso garante que futuras reestruturações do modelo de predição possam ser introduzidas como `/v2` sem quebrar contratos (Backward Compatibility) de consumidores que dependem do `/v1`. Apenas rotas de infraestrutura (como o `/health`) residem na raiz.
+
+Você tem duas opções para subir a API:
 
 **Opção A: Via Github Actions (Recomendado)**
 1. Cadastre os Secrets `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY` no seu repositório.
