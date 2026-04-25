@@ -47,6 +47,8 @@ A estrutura de software que suporta o modelo em produção.
 * **Governança Pós-Deploy**:
     * [**Model Card**](docs/model-card.md): Documentação técnica sobre performance, vieses e limitações do modelo.
     * [**Plano de Monitoramento**](docs/monitoring.md): Estratégia de alertas e métricas pós-deploy.
+* **Infraestrutura Cloud**:
+    * [**Arquitetura AWS**](docs/infrastructure.md): Diagrama e detalhes do deploy em produção via Terraform.
 
 ---
 
@@ -116,6 +118,28 @@ O MLflow é o nosso repositório de governança. Para visualizar o comparativo d
    * **`churn_mlp_pytorch`**: Contém o histórico da Etapa 2 (A Rede Neural inicial e as Sub-Runs aninhadas do Grid Search).
    * **`churn_mlp_pytorch_modular`**: Contém o rastreio da automação corporativa (Etapa 3), gravando logs isolados do script `train_model.py`.
 
+
+### ☁️ Deploy na Nuvem AWS (Produção)
+O projeto conta com Infraestrutura como Código (Terraform) para criar um ambiente grátis (Free-Tier) na AWS do Brasil (`sa-east-1`). A arquitetura engloba uma máquina EC2 executando o Docker com proteção HTTPS via CloudFront. Você tem duas opções para subir a API:
+
+**Opção A: Via Github Actions (Recomendado)**
+1. Cadastre os Secrets `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY` no seu repositório.
+2. Acesse a aba **Actions** > **IaC - Terraform AWS Deploy**.
+3. Clique em *Run workflow* com o parâmetro `apply` para criar, ou `destroy` para destruir. A URL da API aparecerá nos logs finais do Job.
+
+**Opção B: Via Terminal Local (Makefile)**
+1. Exporte suas credenciais da AWS no terminal:
+   ```bash
+   export AWS_ACCESS_KEY_ID="sua_chave"
+   export AWS_SECRET_ACCESS_KEY="seu_segredo"
+   ```
+2. Inicialize o projeto e suba a infraestrutura:
+   ```bash
+   make tf-init
+   make tf-apply
+   ```
+3. A URL segura do CloudFront (HTTPS) será cuspida na tela do terminal.
+4. Para desligar e evitar custos residuais, rode: `make tf-destroy`.
 
 ---
 
