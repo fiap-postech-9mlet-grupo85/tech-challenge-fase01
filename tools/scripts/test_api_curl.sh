@@ -17,9 +17,9 @@ echo -e "\n"
 
 # 2. Teste de Predição de Churn (Payload Válido)
 echo "----------------------------------------------------------"
-echo "🔵 2. Predição de Churn - Payload Válido (POST /predict)"
+echo "🔵 2. Predição de Churn - Payload Válido (POST /v1/predict)"
 echo "----------------------------------------------------------"
-curl -s -X POST "$BASE_URL/predict" \
+curl -s -X POST "$BASE_URL/v1/predict" \
   -H "Content-Type: application/json" \
   -d '{
     "gender": "Female",
@@ -41,7 +41,7 @@ curl -s -X POST "$BASE_URL/predict" \
     "PaymentMethod": "Electronic check",
     "MonthlyCharges": 29.85,
     "TotalCharges": "29.85"
-  }' | jq || curl -s -X POST "$BASE_URL/predict" \
+  }' | jq || curl -s -X POST "$BASE_URL/v1/predict" \
   -H "Content-Type: application/json" \
   -d '{
     "gender": "Female",
@@ -68,9 +68,9 @@ echo -e "\n"
 
 # 3. Teste de Predição de Churn (Payload Inválido - Erro 422)
 echo "----------------------------------------------------------"
-echo "🔴 3. Validação de Erro - Falta 'MonthlyCharges' (POST /predict)"
+echo "🔴 3. Validação de Erro - Falta 'MonthlyCharges' (POST /v1/predict)"
 echo "----------------------------------------------------------"
-curl -s -X POST "$BASE_URL/predict" \
+curl -s -X POST "$BASE_URL/v1/predict" \
   -H "Content-Type: application/json" \
   -d '{
     "gender": "Female",
@@ -91,7 +91,7 @@ curl -s -X POST "$BASE_URL/predict" \
     "PaperlessBilling": "Yes",
     "PaymentMethod": "Electronic check",
     "TotalCharges": "29.85"
-  }' | jq || curl -s -X POST "$BASE_URL/predict" \
+  }' | jq || curl -s -X POST "$BASE_URL/v1/predict" \
   -H "Content-Type: application/json" \
   -d '{
     "gender": "Female",

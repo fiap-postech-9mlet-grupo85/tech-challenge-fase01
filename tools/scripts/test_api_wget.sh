@@ -17,9 +17,9 @@ echo -e "\n"
 
 # 2. Teste de Predição de Churn (Payload Válido)
 echo "----------------------------------------------------------"
-echo "🔵 2. Predição de Churn - Payload Válido (POST /predict)"
+echo "🔵 2. Predição de Churn - Payload Válido (POST /v1/predict)"
 echo "----------------------------------------------------------"
-wget -qO- "$BASE_URL/predict" \
+wget -qO- "$BASE_URL/v1/predict" \
   --header="Content-Type: application/json" \
   --post-data='{
     "gender": "Female",
@@ -41,7 +41,7 @@ wget -qO- "$BASE_URL/predict" \
     "PaymentMethod": "Electronic check",
     "MonthlyCharges": 29.85,
     "TotalCharges": "29.85"
-  }' | jq || wget -qO- "$BASE_URL/predict" \
+  }' | jq || wget -qO- "$BASE_URL/v1/predict" \
   --header="Content-Type: application/json" \
   --post-data='{
     "gender": "Female",
@@ -68,10 +68,10 @@ echo -e "\n"
 
 # 3. Teste de Predição de Churn (Payload Inválido - Erro 422)
 echo "----------------------------------------------------------"
-echo "🔴 3. Validação de Erro - Falta 'MonthlyCharges' (POST /predict)"
+echo "🔴 3. Validação de Erro - Falta 'MonthlyCharges' (POST /v1/predict)"
 echo "----------------------------------------------------------"
 # Usamos --content-on-error no wget para que ele printe a mensagem de erro HTTP (ex: 422 Unprocessable Entity)
-wget -qO- --content-on-error "$BASE_URL/predict" \
+wget -qO- --content-on-error "$BASE_URL/v1/predict" \
   --header="Content-Type: application/json" \
   --post-data='{
     "gender": "Female",
@@ -92,7 +92,7 @@ wget -qO- --content-on-error "$BASE_URL/predict" \
     "PaperlessBilling": "Yes",
     "PaymentMethod": "Electronic check",
     "TotalCharges": "29.85"
-  }' | jq || wget -qO- --content-on-error "$BASE_URL/predict" \
+  }' | jq || wget -qO- --content-on-error "$BASE_URL/v1/predict" \
   --header="Content-Type: application/json" \
   --post-data='{
     "gender": "Female",

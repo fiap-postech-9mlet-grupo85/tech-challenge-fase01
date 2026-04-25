@@ -6,7 +6,7 @@ Para provisionar o modelo preditivo em nuvem garantindo os requisitos de **Custo
 
 ```mermaid
 flowchart TD
-    User(["Usuário Externo / Banca"]) -->|"HTTPS\n(telcochurn.cloud-ip.cc)"| DNS["ClouDNS\n(Resolução de Nome)"]
+    User(["Usuário Externo / Banca"]) -->|"HTTPS\n(api.telcochurn.cloud-ip.cc)"| DNS["ClouDNS\n(Resolução de Nome)"]
     DNS -->|"CNAME"| CF["AWS CloudFront\n(Proxy Reverso Dinâmico)"]
     
     subgraph "AWS Public Cloud (sa-east-1)"
@@ -39,7 +39,7 @@ A computação é baseada em uma máquina Amazon Linux 2023. O grande trunfo arq
 Sistemas expostos em IPs públicos puros são penalizados por navegadores pela ausência de SSL (Cadeado Verde). Utilizamos o CloudFront como **Proxy Reverso gratuito** para englobar nossa instância. 
 
 Para alcançar excelência de mercado sem custo, utilizamos:
-* **ClouDNS**: Provedor externo gratuito que permite Gestão de Zona DNS. Registramos o domínio `telcochurn.cloud-ip.cc`.
+* **ClouDNS**: Provedor externo gratuito que permite Gestão de Zona DNS. Registramos o subdomínio `api.telcochurn.cloud-ip.cc`.
 * **AWS Certificate Manager (ACM)**: Emitimos um certificado TLS/SSL oficial na região da Virgínia (`us-east-1`), comprovando a posse do domínio via registro CNAME no ClouDNS.
 * Com o certificado acoplado ao CloudFront, garantimos acesso HTTPS através de um domínio completamente amigável à banca, mascarando a infraestrutura subjacente.
 

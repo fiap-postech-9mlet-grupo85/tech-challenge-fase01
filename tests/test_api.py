@@ -39,7 +39,7 @@ def test_health_endpoint():
 def test_predict_success():
     """Garante que um payload correto retorna a predição da Rede Neural com código 200."""
     with TestClient(app) as client:
-        response = client.post("/predict", json=valid_payload)
+        response = client.post("/v1/predict", json=valid_payload)
         assert response.status_code == 200
         data = response.json()
         assert "churn_prediction" in data
@@ -54,7 +54,7 @@ def test_predict_validation_error():
     del invalid_payload["MonthlyCharges"]  # Remove campo numérico obrigatório
 
     with TestClient(app) as client:
-        response = client.post("/predict", json=invalid_payload)
+        response = client.post("/v1/predict", json=invalid_payload)
         # 422 Unprocessable Entity é a resposta padrão do FastAPI/Pydantic
         assert response.status_code == 422
         assert "detail" in response.json()
