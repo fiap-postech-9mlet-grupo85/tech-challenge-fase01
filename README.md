@@ -148,6 +148,11 @@ O projeto conta com Infraestrutura como Código (Terraform) para criar um ambien
 **Domínio Customizado (AWS ACM + ClouDNS):**
 Para entregar uma experiência profissional, implementamos um domínio limpo e seguro: `https://api.telcochurn.cloud-ip.cc/docs`. O Terraform gera automaticamente um certificado de segurança via AWS ACM e engata esse domínio no CloudFront, mediante a criação de registros CNAME no painel gratuito do ClouDNS.
 
+**Segurança de Borda (AWS WAF & Geo-Blocking):**
+A API é protegida no nível Edge da CloudFront com duas camadas de proteção cibernética:
+1. **Restrição Geográfica:** Acesso permitido estritamente a IPs do Brasil (BR) e Portugal (PT), descartando bots maliciosos globais a custo zero.
+2. **AWS WAF (Rate Limiting):** Regra de firewall anti-DDoS limitando cada IP a um máximo de 100 requisições por janela de 5 minutos, garantindo a estabilidade da infraestrutura gratuita da EC2.
+
 **Versionamento Semântico (v1):**
 Visando aderência a padrões arquiteturais corporativos, a API implementa roteamento versionado (`/v1`). Isso garante que futuras reestruturações do modelo de predição possam ser introduzidas como `/v2` sem quebrar contratos (Backward Compatibility) de consumidores que dependem do `/v1`. Apenas rotas de infraestrutura (como o `/health`) residem na raiz.
 

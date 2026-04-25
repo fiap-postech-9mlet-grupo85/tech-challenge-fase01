@@ -145,7 +145,8 @@ resource "aws_cloudfront_distribution" "api_cdn" {
 
   restrictions {
     geo_restriction {
-      restriction_type = "none"
+      restriction_type = "whitelist"
+      locations        = ["BR", "PT"]
     }
   }
 
@@ -153,5 +154,50 @@ resource "aws_cloudfront_distribution" "api_cdn" {
     acm_certificate_arn      = aws_acm_certificate.api_cert.arn
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2021"
+  }
+  
+  web_acl_id = aws_wafv2_web_acl.api_waf.arn
+}
+
+# 6. AWS WAF (Web Application Firewall) para Segurança Avançada na Borda
+resource "aws_wafv2_web_acl" "api_waf" {
+  provider    = aws.us_east_1
+  name        = "telco-churn-api-waf"
+  description = "WAF para bloquear abusos e ataques contra a API"
+  scope       = "CLOUDFRONT"
+
+  default_action {
+    allow {}
+  }
+
+  # Regra 1: Rate Limiting (Bloqueia IPs que fizerem mais de 100 requisições em 5 minutos)
+  rule {
+    name     = "RateLimitRule"
+    priority = 1
+
+    action {
+      block {}
+    }
+
+    statement {
+      rate_based_statement {
+        limit              = 100
+        aggregate_key_type = "IP"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = false
+      metric_name                = "RateLimitRuleMetric"
+      sampled_requests_enabled   = false
+    }
+  }
+
+
+
+  visibility_config {
+    cloudwatch_metrics_enabled = false
+    metric_name                = "TelcoChurnApiWafMetric"
+    sampled_requests_enabled   = false
   }
 }
