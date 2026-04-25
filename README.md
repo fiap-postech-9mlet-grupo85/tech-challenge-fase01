@@ -106,6 +106,11 @@ Para garantir a saúde do software desenvolvido, a suíte de testes do Pytest co
    ```
    A API subirá na porta 8000. Acesse [http://localhost:8000/docs](http://localhost:8000/docs) para enviar predições em tempo real pela interface gráfica.
 
+10. **Testando via Postman:** Há uma coleção pré-configurada na pasta `tools/postman/Telco_Churn_API.postman_collection.json`.
+    * Abra o Postman e clique em **Import** (ou arraste o arquivo).
+    * A coleção possui uma variável chamada `base_url` que por padrão vem como `http://localhost:8000`. Teste os requests localmente.
+    * **Testando na AWS:** Quando a sua nuvem estiver de pé (veja a próxima seção), basta você clicar na aba *Variables* da coleção no Postman e trocar o valor de `base_url` de `http://localhost:8000` para a URL gerada do seu **CloudFront** (ex: `https://d3v3l0p3r.cloudfront.net`). Com uma única troca, os três testes já poderão acessar a API na nuvem!
+
 ### 📊 Acompanhamento de Experimentos (MLflow UI)
 O MLflow é o nosso repositório de governança. Para visualizar o comparativo de métricas, os hiperparâmetros campeões e acessar os artefatos serializados (tanto da Fase 1 quanto da Fase 2):
 1. Com o ambiente virtual ativado, suba o servidor a partir da raiz do repositório:

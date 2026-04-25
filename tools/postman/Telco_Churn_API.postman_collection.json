@@ -1,0 +1,89 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
+		"name": "Telco Churn API",
+		"description": "Collection completa para testar a API do modelo de predição de Churn localmente e na nuvem AWS.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/health",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"health"
+					]
+				},
+				"description": "Verifica se a API está online e se os modelos foram carregados na memória."
+			},
+			"response": []
+		},
+		{
+			"name": "2. Predict Churn (Valid)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"gender\": \"Female\",\n  \"SeniorCitizen\": 0,\n  \"Partner\": \"Yes\",\n  \"Dependents\": \"No\",\n  \"tenure\": 1,\n  \"PhoneService\": \"No\",\n  \"MultipleLines\": \"No phone service\",\n  \"InternetService\": \"DSL\",\n  \"OnlineSecurity\": \"No\",\n  \"OnlineBackup\": \"Yes\",\n  \"DeviceProtection\": \"No\",\n  \"TechSupport\": \"No\",\n  \"StreamingTV\": \"No\",\n  \"StreamingMovies\": \"No\",\n  \"Contract\": \"Month-to-month\",\n  \"PaperlessBilling\": \"Yes\",\n  \"PaymentMethod\": \"Electronic check\",\n  \"MonthlyCharges\": 29.85,\n  \"TotalCharges\": \"29.85\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/predict",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"predict"
+					]
+				},
+				"description": "Envia um JSON completo (conforme treinado no Scikit-Learn/PyTorch) e recebe a probabilidade do cliente cancelar o plano."
+			},
+			"response": []
+		},
+		{
+			"name": "3. Predict Churn (Missing Field Error)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"gender\": \"Female\",\n  \"SeniorCitizen\": 0,\n  \"Partner\": \"Yes\",\n  \"Dependents\": \"No\",\n  \"tenure\": 1,\n  \"PhoneService\": \"No\",\n  \"MultipleLines\": \"No phone service\",\n  \"InternetService\": \"DSL\",\n  \"OnlineSecurity\": \"No\",\n  \"OnlineBackup\": \"Yes\",\n  \"DeviceProtection\": \"No\",\n  \"TechSupport\": \"No\",\n  \"StreamingTV\": \"No\",\n  \"StreamingMovies\": \"No\",\n  \"Contract\": \"Month-to-month\",\n  \"PaperlessBilling\": \"Yes\",\n  \"PaymentMethod\": \"Electronic check\",\n  \"TotalCharges\": \"29.85\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/predict",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"predict"
+					]
+				},
+				"description": "Exemplo de erro (422 Unprocessable Entity) - Falta a chave obrigatória 'MonthlyCharges' acionando o validador do Pydantic."
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		}
+	]
+}
