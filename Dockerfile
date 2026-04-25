@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copia os arquivos de dependência primeiro para aproveitar o cache de layers do Docker
-COPY pyproject.toml setup.py /app/
+COPY pyproject.toml /app/
 
 # Instala as dependências via pip
 RUN pip install --no-cache-dir --upgrade pip
