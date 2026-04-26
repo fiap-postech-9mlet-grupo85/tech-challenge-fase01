@@ -126,9 +126,9 @@ Para garantir a saúde do software desenvolvido, a suíte de testes do Pytest co
     ```
     **Como testar na Nuvem AWS:** Passe a URL gerada pelo seu CloudFront como argumento!
     ```bash
-    ./tools/scripts/test_api_curl.sh "https://seu-dominio.cloudfront.net"
+    ./tools/scripts/test_api_curl.sh "https://api.telcochurn.cloud-ip.cc"
     # ou
-    ./tools/scripts/test_api_wget.sh "https://seu-dominio.cloudfront.net"
+    ./tools/scripts/test_api_wget.sh "https://api.telcochurn.cloud-ip.cc"
     ```
 
 ### 📊 Acompanhamento de Experimentos (MLflow UI)
