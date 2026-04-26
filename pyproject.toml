@@ -11,7 +11,9 @@ requires-python = ">=3.10"
 authors = [
     { name = "Bruno Machado Abreu - rm372965" },
     { name = "Renan Prado Gonzalez - rm374089" },
-    { name = "Davi Coene Rosa - rm371466" }
+    { name = "Davi Coene Rosa - rm371466" },
+    { name = "Pedro Gabriel Pereira do Nascimento - rm372994" },
+    { name = "Paulo Henrique Alves Krempel - rm374144" }
 ]
 # Dependências principais exigidas e auxiliares
 dependencies = [
