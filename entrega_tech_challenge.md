@@ -7,6 +7,8 @@
 * Bruno Machado Abreu (RM372965)
 * Renan Prado Gonzalez (RM374089)
 * Davi Coene Rosa (RM371466)
+* Paulo Henrique Alves Krempel (RM374144)
+* Pedro Gabriel Pereira do Nascimento (RM372994)
 
 ---
 
