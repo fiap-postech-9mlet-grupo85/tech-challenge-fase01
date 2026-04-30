@@ -3,7 +3,6 @@ from unittest.mock import patch
 import pandas as pd
 
 import src.models.train_model as tm
-from src.models.train_model import main
 
 
 @patch("src.models.train_model.pd.read_csv")
@@ -53,7 +52,7 @@ def test_train_model_pipeline(
     tm.BATCH_SIZE = 2
 
     # Executa o pipeline
-    main()
+    tm.main()
 
     # Verificações de Asserção (garante que os componentes vitais foram chamados)
     assert mock_read_csv.called, "Deveria ter lido o CSV"
