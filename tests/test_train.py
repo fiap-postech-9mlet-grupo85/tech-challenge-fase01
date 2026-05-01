@@ -48,11 +48,10 @@ def test_train_model_pipeline(
     mock_read_csv.return_value = mock_df
 
     # Sobrescrevendo constantes de hiperparâmetros para o teste durar < 1 segundo
-    tm.EPOCHS = 2
-    tm.BATCH_SIZE = 2
-
-    # Executa o pipeline
-    tm.main()
+    # de forma isolada (sem vazar estado global para outros testes)
+    with patch.object(tm, "EPOCHS", 2), patch.object(tm, "BATCH_SIZE", 2):
+        # Executa o pipeline
+        tm.main()
 
     # Verificações de Asserção (garante que os componentes vitais foram chamados)
     assert mock_read_csv.called, "Should have read the CSV"
