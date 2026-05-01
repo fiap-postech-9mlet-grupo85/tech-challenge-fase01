@@ -1,5 +1,8 @@
 name: IaC - Terraform AWS Deploy
 
+permissions:
+  contents: read
+
 on:
   workflow_dispatch:
     inputs:

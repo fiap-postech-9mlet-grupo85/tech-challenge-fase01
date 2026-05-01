@@ -1,5 +1,8 @@
 name: Ops - Restart EC2 Instance
 
+permissions:
+  contents: read
+
 on:
   workflow_dispatch: # Permite rodar o workflow manualmente pelo painel do Github
 

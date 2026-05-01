@@ -1,5 +1,8 @@
 name: CI/CD Pipeline - Docker Hub
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [ "main" ]
