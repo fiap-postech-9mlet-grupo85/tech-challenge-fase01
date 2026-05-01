@@ -13,9 +13,9 @@ def test_train_model_pipeline(
     mock_mlflow, mock_torch_save, mock_joblib_dump, mock_read_csv
 ):
     """
-    Testa a orquestração do pipeline de treinamento end-to-end (Limpeza -> Pré-Processamento ->
-    PyTorch Training -> MLflow Logging) utilizando um dataset mockado minúsculo para evitar
-    custo computacional durante a esteira de CI/CD.
+    Tests end-to-end training pipeline orchestration (Cleaning -> Preprocessing ->
+    PyTorch Training -> MLflow Logging) using a tiny mocked dataset to avoid
+    computational cost during the CI/CD pipeline.
     """
     # DataFrame fictício mínimo (10 linhas) cobrindo os cenários das features
     mock_df = pd.DataFrame(
