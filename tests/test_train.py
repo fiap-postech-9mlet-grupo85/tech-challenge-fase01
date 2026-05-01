@@ -55,7 +55,7 @@ def test_train_model_pipeline(
     tm.main()
 
     # Verificações de Asserção (garante que os componentes vitais foram chamados)
-    assert mock_read_csv.called, "Deveria ter lido o CSV"
-    assert mock_joblib_dump.called, "Deveria ter salvo o Preprocessor do Sklearn"
-    assert mock_torch_save.called, "Deveria ter salvo os pesos da rede PyTorch"
-    assert mock_mlflow.start_run.called, "Deveria ter iniciado o Tracking no MLflow"
+    assert mock_read_csv.called, "Should have read the CSV"
+    assert mock_joblib_dump.called, "Should have saved the sklearn preprocessor"
+    assert mock_torch_save.called, "Should have saved the PyTorch model weights"
+    assert mock_mlflow.start_run.called, "Should have started MLflow tracking"
