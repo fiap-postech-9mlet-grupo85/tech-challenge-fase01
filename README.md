@@ -75,12 +75,17 @@ Para executar este projeto localmente, garanta que sua máquina possua:
 ## 🚀 Como Executar
 
 ### 🔧 Preparação do Ambiente
-1.  **Criar Ambiente Virtual:** `python3 -m venv .venv`
-2.  **Ativar o Ambiente:** 
-    - Mac/Linux: `source .venv/bin/activate`
-    - Windows: `.venv\Scripts\activate`
-3.  **Setup de Dependências:** Com o ambiente ativado, rode `make install`.
-4.  **Baixar os Dados:** Execute o script `make download-data` (ou `bash tools/scripts/download_data.sh`) para buscar o dataset da IBM.
+Basta clonar o repositório e rodar o nosso atalho de automação principal:
+```bash
+make setup
+```
+Este script fará tudo por você:
+1. Criará o ambiente virtual (`.venv`).
+2. Instalará as dependências do projeto via pip.
+3. Baixará o dataset automaticamente (simulando extração de um Data Lake).
+4. Instalará o Git Pre-Commit Hook para garantir a padronização do código via Ruff.
+
+*(Lembre-se de ativar o ambiente virtual com `source .venv/bin/activate` após o setup).*
 
 ### 🧠 Execução da Modelagem
 5.  **Fase 1 (EDA e Baselines Lineares):** Execute o notebook `notebooks/01-eda-baselines.ipynb` para limpar os dados e treinar os modelos iniciais do Scikit-Learn.
@@ -93,13 +98,24 @@ Para executar este projeto localmente, garanta que sua máquina possua:
     ```
     Isso povoará a pasta `models/` com os artefatos `preprocessor.joblib` e `churn_mlp.pth` que serão sugados pela API. Além disso, o treinamento espelhará os dados em formato de log no **MLflow**.
 
-### 🛡️ Engenharia de Qualidade (Testes Unitários)
-Para garantir a saúde do software desenvolvido, a suíte de testes do Pytest cobre desde o tratamento de anomalias no dataset até a arquitetura dos tensores da Rede Neural.
+### 🛡️ Engenharia de Qualidade (Testes Unitários & Coverage)
+Para garantir a saúde do software desenvolvido e prevenir regressões, este repositório possui **100% de Test Coverage** validado pelo `pytest-cov`. A suíte engloba:
+* **Testes de Integração da API:** Simulam requisições HTTP válidas e inválidas, garantindo retornos HTTP 422 e 500 adequados.
+* **Unhappy Paths e Edge Cases:** Cobertura de falhas extremas como arquivos de modelo deletados, datasets ausentes, disparos artificiais de *Early Stopping* e simulação de *Cold Start* na nuvem.
+* **Testes de Engenharia de Features:** Valida se anomalias no dataset (ex: strings vazias em numéricos) são limpas perfeitamente pela pipeline do Pandas sem corromper as matrizes originais.
+
 8. **Rodar a Suíte de Testes:** Execute o comando abaixo na raiz do repositório:
    ```bash
    make test
    ```
-   A barra verde assegurará que o pacote Python Modular está pronto para ir a Produção.
+   A barra verde com o relatório final de *100% Coverage* assegurará que o pacote Python Modular está blindado e pronto para ir a Produção.
+
+### 🧹 Padronização de Código (Pre-Commit & Ruff)
+Para garantir que a base de código (codebase) cresça de forma saudável e limpa, adotamos o **Ruff** (Linter e Formatador) integrado via **Git Pre-Commit Hook**. 
+Antes de qualquer commit, o repositório formata os arquivos e detecta variáveis inúteis ou más práticas.
+* **Instalação do Hook:** Após criar seu ambiente virtual, rode `pre-commit install`.
+* **Como funciona:** Toda vez que você executar um `git commit`, o Ruff varrerá o código automaticamente. Se houver falhas de Lint (como a falta de uso de uma variável declarada), o commit será abortado.
+* **Rodando Manualmente:** `ruff check .` (para linting) e `ruff format .` (para formatar).
 
 ### 🌐 Disponibilização da API (FastAPI)
 9. **Iniciar o Servidor Local:** Para expor a nossa inteligência via HTTP e interagir com o Swagger UI, basta rodar:
