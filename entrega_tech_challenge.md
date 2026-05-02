@@ -21,7 +21,7 @@
 
 2. **Apresentação do Projeto (Vídeo STAR):**
 
-   [![Pitch - Tech Challenge](https://img.youtube.com/vi/3OpsjKj8Zlw/hqdefault.jpg)](https://www.youtube.com/watch?v=3OpsjKj8Zlw)
+   [![Pitch - Tech Challenge](https://img.youtube.com/vi/Suc6MSXFXcM/hqdefault.jpg)](https://www.youtube.com/watch?v=Suc6MSXFXcM)
    
    > *Nota:* Vídeo pitch explicativo detalhando a Situação, Tarefa, Ações e Resultados do projeto.
 
