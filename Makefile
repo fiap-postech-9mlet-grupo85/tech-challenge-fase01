@@ -5,7 +5,7 @@ PIP = $(VENV_BIN)/pip
 PYTEST = $(VENV_BIN)/pytest
 RUFF = $(VENV_BIN)/ruff
 
-.PHONY: venv install clean lint format download-data test train run-api docker-build docker-run tf-init tf-plan tf-apply tf-destroy
+.PHONY: venv install setup clean lint format download-data test train run-api docker-build docker-run tf-init tf-plan tf-apply tf-destroy
 
 # Regra para criar o ambiente virtual caso não exista
 $(VENV)/bin/activate:
@@ -15,6 +15,9 @@ venv: $(VENV)/bin/activate
 
 install: venv
 	$(PIP) install -e ".[dev]"
+
+setup: install download-data
+	$(VENV_BIN)/pre-commit install
 
 download-data:
 	bash tools/scripts/download_data.sh
